@@ -42,6 +42,8 @@
     [data-theme="dark"] .support-a { color: #ffee58; }
     [data-theme="dark"] .support-n { color: #ef5350; }
 
+    tr.gripe td { background-color: color-mix(in srgb, var(--pico-del-color) 10%, var(--pico-background-color)); }
+
     table td:nth-child(n+2),
     table th:nth-child(n+2) {
       text-align: center;
@@ -86,7 +88,7 @@
           <li>
             <hgroup>
                 <h1>pwa.gripe</h1>
-                <p>Apple's intentional crippling of Safari on iOS and iPadOS incentivizes App Store sales over improving web app features</p>
+                <p>Apple's intentional crippling of Safari on iOS and iPadOS intentionally cripples the open web to try and drive more App Store sales</p>
             </hgroup>
           </li>
         </ul>
@@ -100,7 +102,7 @@
       </nav>
 
       <div class="overflow-auto">
-        <table class="striped">
+        <table>
           <thead>
             <tr>
               <th scope="col">Feature</th>
@@ -111,7 +113,7 @@
           </thead>
           <tbody>
             {%- for f in features %}
-            <tr>
+            <tr{% if f.chrome_support == 'y' and f.ios_support != 'y' %} class="gripe"{% endif %}>
               <td>{{ f.name }}</td>
               {%- if f.chrome_support == 'y' %}
               <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
