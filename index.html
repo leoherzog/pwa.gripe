@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pwa.gripe — What Apple Still Won't Let You Do</title>
+  <meta name="description" content="See which PWA features are supported on Chrome, Safari, and your browser.">
+  <meta name="author" content="pwa.gripe">
+  <meta name="theme-color" content="#1a1a2e">
+  <link rel="canonical" href="https://pwa.gripe/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pwa.gripe/">
+  <meta property="og:title" content="pwa.gripe — What Apple Still Won't Let You Do">
+  <meta property="og:description" content="See which PWA features are supported on Chrome, Safari, and your browser.">
+  <meta property="og:site_name" content="pwa.gripe">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="pwa.gripe — What Apple Still Won't Let You Do">
+  <meta name="twitter:description" content="See which PWA features are supported on Chrome, Safari, and your browser.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7/js/fontawesome.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7/js/solid.min.js" crossorigin="anonymous"></script>
+  <style>
+    .support-y { color: #2e7d32; }
+    .support-a { color: #f9a825; }
+    .support-n { color: #c62828; }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .support-y { color: #66bb6a; }
+      :root:not([data-theme="light"]) .support-a { color: #ffee58; }
+      :root:not([data-theme="light"]) .support-n { color: #ef5350; }
+    }
+
+    [data-theme="dark"] .support-y { color: #66bb6a; }
+    [data-theme="dark"] .support-a { color: #ffee58; }
+    [data-theme="dark"] .support-n { color: #ef5350; }
+
+    table td:nth-child(n+2),
+    table th:nth-child(n+2) {
+      text-align: center;
+    }
+
+    table svg.svg-inline--fa {
+      font-size: 1.25rem;
+    }
+
+    [data-tooltip]::before {
+      white-space: normal;
+      max-width: 80ch;
+      text-align: left;
+    }
+
+    td[data-feature] {
+      min-width: 3rem;
+    }
+
+    article {
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    #theme-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.25rem 0.5rem;
+      font-size: 1.25rem;
+      color: var(--pico-muted-color);
+      margin: 0;
+      width: auto;
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <article>
+      <nav>
+        <ul>
+          <li>
+            <hgroup>
+                <h1>pwa.gripe</h1>
+                <p>Apple's intentional crippling of Safari on iOS and iPadOS incentivizes App Store sales over improving web app features</p>
+            </hgroup>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <button id="theme-toggle" data-tooltip="Auto" data-placement="bottom" aria-label="Toggle theme">
+              <span class="fa-solid fa-circle-half-stroke">&#x25D1;</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="overflow-auto">
+        <table class="striped">
+          <thead>
+            <tr>
+              <th scope="col">Feature</th>
+              <th scope="col">Chrome 145<br><small>Android</small></th>
+              <th scope="col">Mobile Safari 26.4<br><small>iOS/iPadOS</small></th>
+              <th scope="col" id="user-browser-header">Your Browser</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Installation</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-exclamation support-a">&#x26A0;</span></td>
+              <td data-feature="installation" data-detect="'BeforeInstallPromptEvent' in window"></td>
+            </tr>
+            <tr>
+              <td>Offline Support</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td data-feature="serviceworkers" data-detect="'serviceWorker' in navigator"></td>
+            </tr>
+            <tr>
+              <td>Notifications</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td data-tooltip="Requires website to first be added to the Home Screen"><span class="fa-solid fa-circle-exclamation support-a">&#x26A0;</span></td>
+              <td data-feature="notifications" data-detect="'Notification' in window"></td>
+            </tr>
+            <tr>
+              <td>Web Push</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td data-tooltip="Requires website to first be added to the Home Screen."><span class="fa-solid fa-circle-exclamation support-a">&#x26A0;</span></td>
+              <td data-feature="push-api" data-detect="'PushManager' in window"></td>
+            </tr>
+            <tr>
+              <td>Shortcuts</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td data-feature="shortcuts"></td>
+            </tr>
+            <tr>
+              <td>View Transitions</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td data-feature="view-transitions" data-detect="'startViewTransition' in document"></td>
+            </tr>
+            <tr>
+              <td>Incoming Call Notifications</td>
+              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td data-feature="incoming-call-notifications"></td>
+            </tr>
+            <tr>
+              <td>Geolocation</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td data-feature="geolocation" data-detect="'geolocation' in navigator"></td>
+            </tr>
+            <tr>
+              <td>Media Capture</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td data-feature="stream" data-detect="'mediaDevices' in navigator"></td>
+            </tr>
+            <tr>
+              <td>Picture-in-Picture</td>
+              <td data-tooltip="Automatically plays fullscreen videos in Picture-in-Picture mode after user hits Home Screen button. Only Android 8.0 Oreo and newer provide appropriate API for Picture-in-Picture."><span class="fa-solid fa-circle-exclamation support-a">&#x26A0;</span></td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td data-feature="picture-in-picture" data-detect="'documentPictureInPicture' in window"></td>
+            </tr>
+            <tr>
+              <td>File System</td>
+              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td data-feature="native-filesystem-api" data-detect="'showOpenFilePicker' in window"></td>
+            </tr>
+            <tr>
+              <td>Compression Streams</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td data-feature="compression-streams" data-detect="'CompressionStream' in window"></td>
+            </tr>
+            <tr>
+              <td>Authentication</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td data-feature="webauthn" data-detect="'PublicKeyCredential' in window"></td>
+            </tr>
+            <tr>
+              <td>Protocol Handling</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td data-feature="protocol-handling" data-detect="'registerProtocolHandler' in navigator"></td>
+            </tr>
+            <tr>
+              <td>File Handling</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td data-feature="file-handling" data-detect="'launchQueue' in window"></td>
+            </tr>
+            <tr>
+              <td>Contact Picker</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td data-feature="contact-picker" data-detect="'contacts' in navigator"></td>
+            </tr>
+            <tr>
+              <td>Web Share</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td data-feature="web-share" data-detect="'share' in navigator"></td>
+            </tr>
+            <tr>
+              <td>Viewport</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td data-feature="viewport" data-detect="'virtualKeyboard' in navigator"></td>
+            </tr>
+            <tr>
+              <td>Barcode Detection</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-exclamation support-a">&#x26A0;</span></td>
+              <td data-feature="barcode-detection" data-detect="'BarcodeDetector' in window"></td>
+            </tr>
+            <tr>
+              <td>Face Detection</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td data-feature="face-detection" data-detect="'FaceDetector' in window"></td>
+            </tr>
+            <tr>
+              <td>Vibration</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td data-feature="vibration" data-detect="'vibrate' in navigator"></td>
+            </tr>
+            <tr>
+              <td>Audio Recording</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td data-feature="mediarecorder" data-detect="'MediaRecorder' in window"></td>
+            </tr>
+            <tr>
+              <td>Media Session</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td data-feature="media-session" data-detect="'mediaSession' in navigator"></td>
+            </tr>
+            <tr>
+              <td>Audio Session</td>
+              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td data-feature="audio-session" data-detect="'audioSession' in navigator"></td>
+            </tr>
+            <tr>
+              <td>Screen Capturing</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td data-feature="mediacapture-fromelement" data-detect="'getDisplayMedia' in navigator.mediaDevices"></td>
+            </tr>
+            <tr>
+              <td>Element Capture</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td data-feature="element-capture" data-detect="'CaptureController' in window"></td>
+            </tr>
+            <tr>
+              <td>Background Sync</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td data-feature="background-sync" data-detect="'SyncManager' in window"></td>
+            </tr>
+            <tr>
+              <td>Background Fetch</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td data-feature="background-fetch" data-detect="'BackgroundFetchManager' in window"></td>
+            </tr>
+            <tr>
+              <td>Storage</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td data-feature="indexeddb" data-detect="'indexedDB' in window"></td>
+            </tr>
+            <tr>
+              <td>Bluetooth</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td data-feature="web-bluetooth" data-detect="'bluetooth' in navigator"></td>
+            </tr>
+            <tr>
+              <td>NFC</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td data-feature="webnfc" data-detect="'NDEFReader' in window"></td>
+            </tr>
+            <tr>
+              <td>AR / VR</td>
+              <td data-tooltip="This API is very extensive. Many of its features are still in development and/or don&#39;t have finalised specs yet."><span class="fa-solid fa-circle-exclamation support-a">&#x26A0;</span></td>
+              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td data-feature="webxr" data-detect="'xr' in navigator"></td>
+            </tr>
+            <tr>
+              <td>Payment</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td data-feature="payment-request" data-detect="'PaymentRequest' in window"></td>
+            </tr>
+            <tr>
+              <td>Wake Lock</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td data-feature="wake-lock" data-detect="'wakeLock' in navigator"></td>
+            </tr>
+            <tr>
+              <td>Orientation</td>
+              <td><span class="fa-solid fa-circle-exclamation support-a">&#x26A0;</span></td>
+              <td><span class="fa-solid fa-circle-exclamation support-a">&#x26A0;</span></td>
+              <td data-feature="deviceorientation" data-detect="'DeviceOrientationEvent' in window"></td>
+            </tr>
+            <tr>
+              <td>Motion</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td data-feature="motion" data-detect="'DeviceMotionEvent' in window"></td>
+            </tr>
+            <tr>
+              <td>Network Info</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td data-feature="netinfo" data-detect="'connection' in navigator"></td>
+            </tr>
+            <tr>
+              <td>Speech Synthesis</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td data-feature="speech-synthesis" data-detect="'speechSynthesis' in window"></td>
+            </tr>
+            <tr>
+              <td>Speech Recognition</td>
+              <td data-tooltip="Partial support refers to some attributes missing."><span class="fa-solid fa-circle-exclamation support-a">&#x26A0;</span></td>
+              <td data-tooltip="Safari 14.1 and TP 119+ include prefixed support for `webkitSpeechRecognition` without support for `SpeechGrammar` or `SpeechGrammarList`. Siri needs to be enabled. Not available in SafariViewController and web apps added to Home Screen."><span class="fa-solid fa-circle-exclamation support-a">&#x26A0;</span></td>
+              <td data-feature="speech-recognition" data-detect="'SpeechRecognition' in window || 'webkitSpeechRecognition' in window"></td>
+            </tr>
+            <tr>
+              <td>Multi Touch</td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td data-feature="touch" data-detect="'ontouchstart' in window"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <footer style="text-align:center">
+        <small>
+          Data from <a href="https://caniuse.com">caniuse.com</a> &middot;
+          Inspired by <a href="https://whatpwacando.today">whatpwacando.today</a> &middot;
+          Updated 2026-03-15  &middot;
+          <a href="https://herzog.tech/" target="_blank">&hearts; herzog.tech</a>
+        </small>
+      </footer>
+    </article>
+  </main>
+
+  <script type="application/json" id="caniuse-data">{"serviceworkers":{"chrome":{"135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y"},"firefox":{"137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y","150":"y","151":"y"},"safari":{"17.4":"y","17.5":"y","17.6":"y","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y","TP":"y"},"edge":{"131":"y","132":"y","133":"y","134":"y","135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y"},"opera":{"113":"y","114":"y","115":"y","116":"y","117":"y","118":"y","119":"y","120":"y","121":"y","122":"y","123":"y","124":"y","125":"y","126":"y","127":"y"},"samsung":{"15.0":"y","16.0":"y","17.0":"y","18.0":"y","19.0":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3-4.4.4":"n","145":"a"},"and_ff":{"147":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","80":"y"},"and_chr":{"145":"y"},"ios_saf":{"17.3":"y","17.4":"y","17.5":"y","17.6-17.7":"y","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y"},"_notes":{"1":"Partial support can be enabled in Firefox with the `dom.serviceWorkers.enabled` flag.","2":"Available behind the \"Enable service workers\" flag","3":"Disabled on Firefox ESR, but can be re-enabled with the `dom.serviceWorkers.enabled` flag","4":"Not supported in Private Browsing mode ([see bug](https://bugzilla.mozilla.org/show_bug.cgi?id=1320796))"}},"notifications":{"chrome":{"135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y"},"firefox":{"137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y","150":"y","151":"y"},"safari":{"17.4":"y","17.5":"y","17.6":"y","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y","TP":"y"},"edge":{"131":"y","132":"y","133":"y","134":"y","135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y"},"opera":{"113":"y","114":"y","115":"y","116":"y","117":"y","118":"y","119":"y","120":"y","121":"y","122":"y","123":"y","124":"y","125":"y","126":"y","127":"y"},"samsung":{"15.0":"n","16.0":"n","17.0":"n","18.0":"n","19.0":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"a","4.4.3-4.4.4":"a","145":"a"},"and_ff":{"147":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","80":"a"},"and_chr":{"145":"y"},"ios_saf":{"17.3":"a","17.4":"a","17.5":"a","17.6-17.7":"a","18.0":"a","18.1":"a","18.2":"a","18.3":"a","18.4":"a","18.5-18.7":"a","26.0":"a","26.1":"a","26.2":"a","26.3":"a","26.4":"a"},"_notes":{"1":"Supports notifications via the [Push API](https://caniuse.com/#feat=push-api) but not the Web Notifications API.","2":"Chrome for Android requires the call to be made with a [service worker registration](https://developer.mozilla.org/en-US/docs/Web/API/Notifications_API#Service_worker_additions)","3":"Requires website to first be [added to the Home Screen](/web-app-manifest)"}},"push-api":{"chrome":{"135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y"},"firefox":{"137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y","150":"y","151":"y"},"safari":{"17.4":"a","17.5":"a","17.6":"a","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y","TP":"y"},"edge":{"131":"y","132":"y","133":"y","134":"y","135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y"},"opera":{"113":"y","114":"y","115":"y","116":"y","117":"y","118":"y","119":"y","120":"y","121":"y","122":"y","123":"y","124":"y","125":"y","126":"y","127":"y"},"samsung":{"15.0":"y","16.0":"y","17.0":"y","18.0":"y","19.0":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3-4.4.4":"n","145":"n"},"and_ff":{"147":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","80":"y"},"and_chr":{"145":"y"},"ios_saf":{"17.3":"a","17.4":"a","17.5":"a","17.6-17.7":"a","18.0":"a","18.1":"a","18.2":"a","18.3":"a","18.4":"a","18.5-18.7":"a","26.0":"a","26.1":"a","26.2":"a","26.3":"a","26.4":"a"},"_notes":{"1":"Partial support refers to not supporting `PushEvent.data` and `PushMessageData`","2":"Requires full browser to be running to receive messages","3":"Safari 7.0 - 16.0 supported a custom implementation which remains available in later versions, see [Safari Push Notifications](https://developer.apple.com/notifications/safari-push-notifications/) and [WWDC video](https://web.archive.org/web/20210419000205/https://developer.apple.com/videos/play/wwdc2013/614/)","4":"Disabled on Firefox ESR, but can be re-enabled with the `dom.serviceWorkers.enabled` and `dom.push.enabled` flags","5":"Only available on macOS 13 Ventura or later","6":"Supported in Safari, not WKWebView nor SFSafariViewController","7":"Requires website to first be added to the Home Screen."}},"view-transitions":{"chrome":{"135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y"},"firefox":{"137":"n","138":"n","139":"n","140":"n","141":"n","142":"n","143":"n","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y","150":"y","151":"y"},"safari":{"17.4":"n","17.5":"n","17.6":"n","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y","TP":"y"},"edge":{"131":"y","132":"y","133":"y","134":"y","135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y"},"opera":{"113":"y","114":"y","115":"y","116":"y","117":"y","118":"y","119":"y","120":"y","121":"y","122":"y","123":"y","124":"y","125":"y","126":"y","127":"y"},"samsung":{"15.0":"n","16.0":"n","17.0":"n","18.0":"n","19.0":"n","20":"n","21":"n","22":"n","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3-4.4.4":"n","145":"y"},"and_ff":{"147":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","80":"y"},"and_chr":{"145":"y"},"ios_saf":{"17.3":"n","17.4":"n","17.5":"n","17.6-17.7":"n","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y"},"_notes":{"1":"Can be enabled using the `dom.viewTransitions.enabled` flag. Enabled by default in Firefox Nightly only"}},"geolocation":{"chrome":{"135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y"},"firefox":{"137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y","150":"y","151":"y"},"safari":{"17.4":"y","17.5":"y","17.6":"y","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y","TP":"y"},"edge":{"131":"y","132":"y","133":"y","134":"y","135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y"},"opera":{"113":"y","114":"y","115":"y","116":"y","117":"y","118":"y","119":"y","120":"y","121":"y","122":"y","123":"y","124":"y","125":"y","126":"y","127":"y"},"samsung":{"15.0":"y","16.0":"y","17.0":"y","18.0":"y","19.0":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3-4.4.4":"y","145":"y"},"and_ff":{"147":"y"},"op_mob":{"10":"p","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","80":"y"},"and_chr":{"145":"y"},"ios_saf":{"17.3":"y","17.4":"y","17.5":"y","17.6-17.7":"y","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y"},"_notes":{"1":"Only works on secure (https) servers"}},"stream":{"chrome":{"135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y"},"firefox":{"137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y","150":"y","151":"y"},"safari":{"17.4":"y","17.5":"y","17.6":"y","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y","TP":"y"},"edge":{"131":"y","132":"y","133":"y","134":"y","135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y"},"opera":{"113":"y","114":"y","115":"y","116":"y","117":"y","118":"y","119":"y","120":"y","121":"y","122":"y","123":"y","124":"y","125":"y","126":"y","127":"y"},"samsung":{"15.0":"y","16.0":"y","17.0":"y","18.0":"y","19.0":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3-4.4.4":"n","145":"y"},"and_ff":{"147":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"a","12.1":"a","80":"y"},"and_chr":{"145":"y"},"ios_saf":{"17.3":"y","17.4":"y","17.5":"y","17.6-17.7":"y","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y"},"_notes":{"1":"Blink-based (and some other) browsers support an older version of the spec that does not use `srcObject`. [See Chromium issue 387740](https://code.google.com/p/chromium/issues/detail?id=387740).","2":"Supports the older spec's `navigator.getUserMedia` API, not the newer `navigator.mediaDevices.getUserMedia` one.","3":"Before iOS 14.3 `getUserMedia` returned no video input devices in `UIWebView` or `WKWebView`, but only directly in Safari.","4":"Does not work in standalone running (\"installed\") PWAs."}},"picture-in-picture":{"chrome":{"135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y"},"firefox":{"137":"a","138":"a","139":"a","140":"a","141":"a","142":"a","143":"a","144":"a","145":"a","146":"a","147":"a","148":"a","149":"a","150":"a","151":"a"},"safari":{"17.4":"y","17.5":"y","17.6":"y","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y","TP":"y"},"edge":{"131":"y","132":"y","133":"y","134":"y","135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y"},"opera":{"113":"y","114":"y","115":"y","116":"y","117":"y","118":"y","119":"y","120":"y","121":"y","122":"y","123":"y","124":"y","125":"y","126":"y","127":"y"},"samsung":{"15.0":"n","16.0":"n","17.0":"n","18.0":"n","19.0":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3-4.4.4":"n","145":"n"},"and_ff":{"147":"a"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","80":"y"},"and_chr":{"145":"a"},"ios_saf":{"17.3":"y","17.4":"y","17.5":"y","17.6-17.7":"y","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y"},"_notes":{"1":"Partial support in Firefox refers to the fact that Mozilla provides an equivalent proprietary feature, which allows users to use Picture-in-Picture mode for all playing videos.","2":"Partial support in Firefox 71 refers to being enabled by default only for Windows users.","3":"Partial support in Firefox 68\u201370 refers to being enabled by default in Firefox pre-release channels for Windows users only.","4":"Can be enabled in Firefox via the `media.videocontrols.picture-in-picture.enabled` pref in `about:config`.","5":"Can be enabled in Chrome via the `#enable-picture-in-picture` & `#enable-surfaces-for-videos` flags in `chrome://flags`.","6":"Partial support in Safari refers to the fact that Apple provides an equivalent proprietary API for Picture-in-Picture, which is only supported by macOS 10.12 Sierra & iOS 9 and newer.","7":"Partial support in Opera refers to the fact that Opera provides an equivalent proprietary feature named Video Pop Out, which allows users to use Picture-in-Picture mode for all playing videos.","8":"Automatically plays fullscreen videos in Picture-in-Picture mode after user hits Home Screen button. Only Android 8.0 Oreo and newer provide appropriate API for Picture-in-Picture."}},"native-filesystem-api":{"chrome":{"135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y"},"firefox":{"137":"n","138":"n","139":"n","140":"n","141":"n","142":"n","143":"n","144":"n","145":"n","146":"n","147":"n","148":"n","149":"n","150":"n","151":"n"},"safari":{"17.4":"n","17.5":"n","17.6":"n","18.0":"n","18.1":"n","18.2":"n","18.3":"n","18.4":"n","18.5-18.7":"n","26.0":"n","26.1":"n","26.2":"n","26.3":"n","26.4":"n","TP":"n"},"edge":{"131":"y","132":"y","133":"y","134":"y","135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y"},"opera":{"113":"y","114":"y","115":"y","116":"y","117":"y","118":"y","119":"y","120":"y","121":"y","122":"y","123":"y","124":"y","125":"y","126":"y","127":"y"},"samsung":{"15.0":"n","16.0":"n","17.0":"n","18.0":"n","19.0":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3-4.4.4":"n","145":"n"},"and_ff":{"147":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","80":"n"},"and_chr":{"145":"n"},"ios_saf":{"17.3":"n","17.4":"n","17.5":"n","17.6-17.7":"n","18.0":"n","18.1":"n","18.2":"n","18.3":"n","18.4":"n","18.5-18.7":"n","26.0":"n","26.1":"n","26.2":"n","26.3":"n","26.4":"n"},"_notes":{"1":"Can be enabled in desktop Chromium browsers with the `#native-file-system-api` flag.","2":"Parts of the API are still missing."}},"webauthn":{"chrome":{"135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y"},"firefox":{"137":"a","138":"a","139":"a","140":"a","141":"a","142":"a","143":"a","144":"a","145":"a","146":"a","147":"a","148":"a","149":"a","150":"a","151":"a"},"safari":{"17.4":"y","17.5":"y","17.6":"y","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y","TP":"y"},"edge":{"131":"y","132":"y","133":"y","134":"y","135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y"},"opera":{"113":"y","114":"y","115":"y","116":"y","117":"y","118":"y","119":"y","120":"y","121":"y","122":"y","123":"y","124":"y","125":"y","126":"y","127":"y"},"samsung":{"15.0":"n","16.0":"n","17.0":"y","18.0":"y","19.0":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3-4.4.4":"n","145":"y"},"and_ff":{"147":"a"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","80":"y"},"and_chr":{"145":"y"},"ios_saf":{"17.3":"y","17.4":"y","17.5":"y","17.6-17.7":"y","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y"},"_notes":{"1":"Can be enabled at `about:flags`\r\n\r\nEdge 13 used an earlier draft syntax. As of Edge 14 the implementation is prefixed and based on the FIDO 2.0 Web APIs.","2":"Can be enabled using the Develop > Experimental Features menu. Currently supports USB-based CTAP & CTAP2 HID devices.","3":"Can be enabled in Settings under the Safari > Advanced > Experimental Features menu.","4":"Partial support refers to FIDO2 devices not working in all operating systems if a PIN is set.","5":"Experimental feature not yet enabled in WKWebView-based browsers including Chrome for iOS.","6":"Partial support refers to TouchID not being supported.","7":"Does not support direct attestations"}},"web-share":{"chrome":{"135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y"},"firefox":{"137":"n","138":"n","139":"n","140":"n","141":"n","142":"n","143":"n","144":"n","145":"n","146":"n","147":"n","148":"n","149":"n","150":"n","151":"n"},"safari":{"17.4":"y","17.5":"y","17.6":"y","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y","TP":"y"},"edge":{"131":"y","132":"y","133":"y","134":"y","135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y"},"opera":{"113":"n","114":"y","115":"y","116":"y","117":"y","118":"y","119":"y","120":"y","121":"y","122":"y","123":"y","124":"y","125":"y","126":"y","127":"y"},"samsung":{"15.0":"y","16.0":"y","17.0":"y","18.0":"y","19.0":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3-4.4.4":"n","145":"n"},"and_ff":{"147":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","80":"y"},"and_chr":{"145":"y"},"ios_saf":{"17.3":"y","17.4":"y","17.5":"y","17.6-17.7":"y","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y"},"_notes":{"1":"Implemented old [Web Intents](https://dvcs.w3.org/hg/web-intents/raw-file/tip/spec/Overview-respec.html)","2":"[Android intent:// URLs](https://developer.chrome.com/docs/android/intents) can be used instead","3":"Only supported on Windows","4":"Only supported on Windows and Chrome OS","5":"Did not support share click that would trigger a [fetch call](https://bugs.webkit.org/show_bug.cgi?id=197779)"}},"vibration":{"chrome":{"135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y"},"firefox":{"137":"n","138":"n","139":"n","140":"n","141":"n","142":"n","143":"n","144":"n","145":"n","146":"n","147":"n","148":"n","149":"n","150":"n","151":"n"},"safari":{"17.4":"n","17.5":"n","17.6":"n","18.0":"n","18.1":"n","18.2":"n","18.3":"n","18.4":"n","18.5-18.7":"n","26.0":"n","26.1":"n","26.2":"n","26.3":"n","26.4":"n","TP":"n"},"edge":{"131":"y","132":"y","133":"y","134":"y","135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y"},"opera":{"113":"y","114":"y","115":"y","116":"y","117":"y","118":"y","119":"y","120":"y","121":"y","122":"y","123":"y","124":"y","125":"y","126":"y","127":"y"},"samsung":{"15.0":"y","16.0":"y","17.0":"y","18.0":"y","19.0":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"y","4.4.3-4.4.4":"y","145":"y"},"and_ff":{"147":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","80":"y"},"and_chr":{"145":"y"},"ios_saf":{"17.3":"n","17.4":"n","17.5":"n","17.6-17.7":"n","18.0":"n","18.1":"n","18.2":"n","18.3":"n","18.4":"n","18.5-18.7":"n","26.0":"n","26.1":"n","26.2":"n","26.3":"n","26.4":"n"}},"mediarecorder":{"chrome":{"135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y"},"firefox":{"137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y","150":"y","151":"y"},"safari":{"17.4":"y","17.5":"y","17.6":"y","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y","TP":"y"},"edge":{"131":"y","132":"y","133":"y","134":"y","135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y"},"opera":{"113":"y","114":"y","115":"y","116":"y","117":"y","118":"y","119":"y","120":"y","121":"y","122":"y","123":"y","124":"y","125":"y","126":"y","127":"y"},"samsung":{"15.0":"y","16.0":"y","17.0":"y","18.0":"y","19.0":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3-4.4.4":"n","145":"n"},"and_ff":{"147":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","80":"y"},"and_chr":{"145":"y"},"ios_saf":{"17.3":"y","17.4":"y","17.5":"y","17.6-17.7":"y","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y"},"_notes":{"1":"Can be enabled via the experimental Web Platform features flag. Does not support audio recording, only video.","2":"Can be enabled using the Develop > Experimental Features menu.","3":"Can be enabled using the Advanced > Experimental Features menu."}},"mediacapture-fromelement":{"chrome":{"135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y"},"firefox":{"137":"a","138":"a","139":"a","140":"a","141":"a","142":"a","143":"a","144":"a","145":"a","146":"a","147":"a","148":"a","149":"a","150":"a","151":"a"},"safari":{"17.4":"a","17.5":"a","17.6":"a","18.0":"a","18.1":"a","18.2":"a","18.3":"a","18.4":"a","18.5-18.7":"a","26.0":"a","26.1":"a","26.2":"a","26.3":"a","26.4":"a","TP":"a"},"edge":{"131":"y","132":"y","133":"y","134":"y","135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y"},"opera":{"113":"y","114":"y","115":"y","116":"y","117":"y","118":"y","119":"y","120":"y","121":"y","122":"y","123":"y","124":"y","125":"y","126":"y","127":"y"},"samsung":{"15.0":"y","16.0":"y","17.0":"y","18.0":"y","19.0":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3-4.4.4":"n","145":"y"},"and_ff":{"147":"a"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","80":"y"},"and_chr":{"145":"y"},"ios_saf":{"17.3":"n","17.4":"n","17.5":"n","17.6-17.7":"n","18.0":"n","18.1":"n","18.2":"n","18.3":"n","18.4":"n","18.5-18.7":"n","26.0":"n","26.1":"n","26.2":"n","26.3":"n","26.4":"n"},"_notes":{"1":"Does not support capture from `<video>`/`<audio>`","2":"Capture from `<video>`/`<audio>` can be enabled via the Experimental Web Platform Features flag."}},"background-sync":{"chrome":{"135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y"},"firefox":{"137":"n","138":"n","139":"n","140":"n","141":"n","142":"n","143":"n","144":"n","145":"n","146":"n","147":"n","148":"n","149":"u","150":"u","151":"u"},"safari":{"17.4":"n","17.5":"n","17.6":"n","18.0":"n","18.1":"n","18.2":"n","18.3":"n","18.4":"n","18.5-18.7":"n","26.0":"n","26.1":"n","26.2":"n","26.3":"n","26.4":"n","TP":"n"},"edge":{"131":"y","132":"y","133":"y","134":"y","135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y"},"opera":{"113":"y","114":"y","115":"y","116":"y","117":"y","118":"y","119":"y","120":"y","121":"y","122":"y","123":"y","124":"y","125":"y","126":"y","127":"y"},"samsung":{"15.0":"y","16.0":"y","17.0":"y","18.0":"y","19.0":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3-4.4.4":"n","145":"y"},"and_ff":{"147":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","80":"y"},"and_chr":{"145":"y"},"ios_saf":{"17.3":"n","17.4":"n","17.5":"n","17.6-17.7":"n","18.0":"n","18.1":"n","18.2":"n","18.3":"n","18.4":"n","18.5-18.7":"n","26.0":"n","26.1":"n","26.2":"n","26.3":"n","26.4":"n"}},"indexeddb":{"chrome":{"135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y"},"firefox":{"137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y","150":"y","151":"y"},"safari":{"17.4":"y","17.5":"y","17.6":"y","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y","TP":"y"},"edge":{"131":"y","132":"y","133":"y","134":"y","135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y"},"opera":{"113":"y","114":"y","115":"y","116":"y","117":"y","118":"y","119":"y","120":"y","121":"y","122":"y","123":"y","124":"y","125":"y","126":"y","127":"y"},"samsung":{"15.0":"y","16.0":"y","17.0":"y","18.0":"y","19.0":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y"},"android":{"2.1":"p","2.2":"p","2.3":"p","3":"p","4":"p","4.1":"p","4.2-4.3":"p","4.4":"y","4.4.3-4.4.4":"y","145":"y"},"and_ff":{"147":"y"},"op_mob":{"10":"n","11":"p","11.1":"p","11.5":"p","12":"p","12.1":"p","80":"y"},"and_chr":{"145":"y"},"ios_saf":{"17.3":"y","17.4":"y","17.5":"y","17.6-17.7":"y","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y"},"_notes":{"1":"Partial support in IE 10 & 11 refers to a number of subfeatures [not being supported](https://indexdb-support-test.glitch.me/). Edge does not support IndexedDB inside blob web workers. [See issue](https://web.archive.org/web/20171213082727/https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/5942817/)","2":"Partial support in Safari 7.1 \u2013 9.3 refers to [seriously buggy behavior](http://www.raymondcamden.com/2014/09/25/IndexedDB-on-iOS-8-Broken-Bad/) as well as a lack of support in WebViews.","3":"Partial support [refers to a bug](https://bugs.webkit.org/show_bug.cgi?id=226547) in Safari 14.1.1 that causes indexedDB to not load when the browser is initially opened."}},"web-bluetooth":{"chrome":{"135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y"},"firefox":{"137":"n","138":"n","139":"n","140":"n","141":"n","142":"n","143":"n","144":"n","145":"n","146":"n","147":"n","148":"n","149":"n","150":"n","151":"n"},"safari":{"17.4":"n","17.5":"n","17.6":"n","18.0":"n","18.1":"n","18.2":"n","18.3":"n","18.4":"n","18.5-18.7":"n","26.0":"n","26.1":"n","26.2":"n","26.3":"n","26.4":"n","TP":"n"},"edge":{"131":"y","132":"y","133":"y","134":"y","135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y"},"opera":{"113":"y","114":"y","115":"y","116":"y","117":"y","118":"y","119":"y","120":"y","121":"y","122":"y","123":"y","124":"y","125":"y","126":"y","127":"y"},"samsung":{"15.0":"y","16.0":"y","17.0":"y","18.0":"y","19.0":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3-4.4.4":"n","145":"y"},"and_ff":{"147":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","80":"y"},"and_chr":{"145":"y"},"ios_saf":{"17.3":"n","17.4":"n","17.5":"n","17.6-17.7":"n","18.0":"n","18.1":"n","18.2":"n","18.3":"n","18.4":"n","18.5-18.7":"n","26.0":"n","26.1":"n","26.2":"n","26.3":"n","26.4":"n"},"_notes":{"1":"Available by enabling the \"Web Bluetooth\" experimental flag in `about:flags`. Currently support [varies by OS](https://github.com/WebBluetoothCG/web-bluetooth/blob/main/implementation-status.md)","2":"Only in Opera Mobile","3":"Available in [Origin Trials](https://developers.google.com/web/updates/2015/07/interact-with-ble-devices-on-the-web#available-for-origin-trials) for Chrome OS, Android M, and Mac","4":"Currently support [varies by OS](https://github.com/WebBluetoothCG/web-bluetooth/blob/main/implementation-status.md#chrome)"}},"webnfc":{"chrome":{"135":"n","136":"n","137":"n","138":"n","139":"n","140":"n","141":"n","142":"n","143":"n","144":"n","145":"n","146":"n","147":"n","148":"n","149":"n"},"firefox":{"137":"n","138":"n","139":"n","140":"n","141":"n","142":"n","143":"n","144":"n","145":"n","146":"n","147":"n","148":"n","149":"n","150":"n","151":"n"},"safari":{"17.4":"n","17.5":"n","17.6":"n","18.0":"n","18.1":"n","18.2":"n","18.3":"n","18.4":"n","18.5-18.7":"n","26.0":"n","26.1":"n","26.2":"n","26.3":"n","26.4":"n","TP":"n"},"edge":{"131":"n","132":"n","133":"n","134":"n","135":"n","136":"n","137":"n","138":"n","139":"n","140":"n","141":"n","142":"n","143":"n","144":"n","145":"n"},"opera":{"113":"n","114":"n","115":"n","116":"n","117":"n","118":"n","119":"n","120":"n","121":"n","122":"n","123":"n","124":"n","125":"n","126":"n","127":"n"},"samsung":{"15.0":"n","16.0":"n","17.0":"n","18.0":"n","19.0":"n","20":"n","21":"n","22":"n","23":"n","24":"n","25":"n","26":"n","27":"n","28":"n","29":"n"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3-4.4.4":"n","145":"n"},"and_ff":{"147":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","80":"n"},"and_chr":{"145":"y"},"ios_saf":{"17.3":"n","17.4":"n","17.5":"n","17.6-17.7":"n","18.0":"n","18.1":"n","18.2":"n","18.3":"n","18.4":"n","18.5-18.7":"n","26.0":"n","26.1":"n","26.2":"n","26.3":"n","26.4":"n"},"_notes":{"1":"Was experimentally supported in desktop Chromium browsers behind the `enable-experimental-web-platform-features` flag.","2":"Current implementations only allow communication through the NDEF protocol in order to minimize security and privacy issues."}},"webxr":{"chrome":{"135":"a","136":"a","137":"a","138":"a","139":"a","140":"a","141":"a","142":"a","143":"a","144":"a","145":"a","146":"a","147":"a","148":"a","149":"a"},"firefox":{"137":"n","138":"n","139":"n","140":"n","141":"n","142":"n","143":"n","144":"n","145":"n","146":"n","147":"n","148":"n","149":"n","150":"n","151":"n"},"safari":{"17.4":"n","17.5":"n","17.6":"n","18.0":"n","18.1":"n","18.2":"n","18.3":"n","18.4":"n","18.5-18.7":"n","26.0":"n","26.1":"n","26.2":"n","26.3":"n","26.4":"n","TP":"n"},"edge":{"131":"a","132":"a","133":"a","134":"a","135":"a","136":"a","137":"a","138":"a","139":"a","140":"a","141":"a","142":"a","143":"a","144":"a","145":"a"},"opera":{"113":"a","114":"a","115":"a","116":"a","117":"a","118":"a","119":"a","120":"a","121":"a","122":"a","123":"a","124":"a","125":"a","126":"a","127":"a"},"samsung":{"15.0":"a","16.0":"a","17.0":"a","18.0":"a","19.0":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a","27":"a","28":"a","29":"a"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3-4.4.4":"n","145":"n"},"and_ff":{"147":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","80":"a"},"and_chr":{"145":"a"},"ios_saf":{"17.3":"n","17.4":"n","17.5":"n","17.6-17.7":"n","18.0":"n","18.1":"n","18.2":"n","18.3":"n","18.4":"n","18.5-18.7":"n","26.0":"n","26.1":"n","26.2":"n","26.3":"n","26.4":"n"},"_notes":{"1":"This API is very extensive. Many of its features are still in development and/or don't have finalised specs yet.","2":"Can be enabled in Firefox behind the `dom.vr.webxr.enabled` flag.","3":"Can be enabled in Safari with the `WebXR Device API` experimental feature."}},"payment-request":{"chrome":{"135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y"},"firefox":{"137":"a","138":"a","139":"a","140":"a","141":"a","142":"a","143":"a","144":"a","145":"a","146":"a","147":"a","148":"a","149":"a","150":"a","151":"a"},"safari":{"17.4":"y","17.5":"y","17.6":"y","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y","TP":"y"},"edge":{"131":"y","132":"y","133":"y","134":"y","135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y"},"opera":{"113":"y","114":"y","115":"y","116":"y","117":"y","118":"y","119":"y","120":"y","121":"y","122":"y","123":"y","124":"y","125":"y","126":"y","127":"y"},"samsung":{"15.0":"y","16.0":"y","17.0":"y","18.0":"y","19.0":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3-4.4.4":"n","145":"n"},"and_ff":{"147":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","80":"y"},"and_chr":{"145":"y"},"ios_saf":{"17.3":"y","17.4":"y","17.5":"y","17.6-17.7":"y","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y"},"_notes":{"1":"Can be enabled via the \"Experimental Web Platform features\" flag","2":"Can be enabled via the \"Experimental Web Payments API\" flag","3":"Apple's proprietary implementation (see above)","4":"Can be enabled via the \"[Web Payments API](chrome://flags/#web-payments)\" flag","5":"Unlike Desktop Chrome, support has been in Chrome for Android since version 53.","6":"Can be enabled via the `dom.payments.request.enabled` flag in \"about:config\" flag since 55.","7":"Missing support for PaymentResponse.prototype.retry() method","8":"Disabled by default in Nightly. To enable, go to \"about:config\" and set \"dom.payments.request.enabled\" to true, and \"dom.payments.request.supportedRegions\" to \"US,CA\"."}},"wake-lock":{"chrome":{"135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y"},"firefox":{"137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y","150":"y","151":"y"},"safari":{"17.4":"y","17.5":"y","17.6":"y","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y","TP":"y"},"edge":{"131":"y","132":"y","133":"y","134":"y","135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y"},"opera":{"113":"y","114":"y","115":"y","116":"y","117":"y","118":"y","119":"y","120":"y","121":"y","122":"y","123":"y","124":"y","125":"y","126":"y","127":"y"},"samsung":{"15.0":"y","16.0":"y","17.0":"y","18.0":"y","19.0":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3-4.4.4":"n","145":"y"},"and_ff":{"147":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","80":"y"},"and_chr":{"145":"y"},"ios_saf":{"17.3":"y","17.4":"y","17.5":"y","17.6-17.7":"y","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y"},"_notes":{"1":"Available behind the #experimental-web-platform-features feature flag","2":"Available behind the `dom.screenwakelock.enabled` flag, which is only enabled by default in early Beta or earlier"}},"deviceorientation":{"chrome":{"135":"a","136":"a","137":"a","138":"a","139":"a","140":"a","141":"a","142":"a","143":"a","144":"a","145":"a","146":"a","147":"a","148":"a","149":"a"},"firefox":{"137":"a","138":"a","139":"a","140":"a","141":"a","142":"a","143":"a","144":"a","145":"a","146":"a","147":"a","148":"a","149":"a","150":"a","151":"a"},"safari":{"17.4":"n","17.5":"n","17.6":"n","18.0":"n","18.1":"n","18.2":"n","18.3":"n","18.4":"n","18.5-18.7":"n","26.0":"n","26.1":"n","26.2":"n","26.3":"n","26.4":"n","TP":"n"},"edge":{"131":"a","132":"a","133":"a","134":"a","135":"a","136":"a","137":"a","138":"a","139":"a","140":"a","141":"a","142":"a","143":"a","144":"a","145":"a"},"opera":{"113":"a","114":"a","115":"a","116":"a","117":"a","118":"a","119":"a","120":"a","121":"a","122":"a","123":"a","124":"a","125":"a","126":"a","127":"a"},"samsung":{"15.0":"a","16.0":"a","17.0":"a","18.0":"a","19.0":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a","27":"a","28":"a","29":"a"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"a","4":"a","4.1":"a","4.2-4.3":"a","4.4":"a","4.4.3-4.4.4":"a","145":"a"},"and_ff":{"147":"a"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"y","12.1":"y","80":"a"},"and_chr":{"145":"a"},"ios_saf":{"17.3":"a","17.4":"a","17.5":"a","17.6-17.7":"a","18.0":"a","18.1":"a","18.2":"a","18.3":"a","18.4":"a","18.5-18.7":"a","26.0":"a","26.1":"a","26.2":"a","26.3":"a","26.4":"a"},"_notes":{"1":"`compassneedscalibration` supported in IE11 only for compatible devices with Windows 8.1+."}},"netinfo":{"chrome":{"135":"a","136":"a","137":"a","138":"a","139":"a","140":"a","141":"a","142":"a","143":"a","144":"a","145":"a","146":"a","147":"a","148":"a","149":"a"},"firefox":{"137":"n","138":"n","139":"n","140":"n","141":"n","142":"n","143":"n","144":"n","145":"n","146":"n","147":"n","148":"n","149":"n","150":"n","151":"n"},"safari":{"17.4":"n","17.5":"n","17.6":"n","18.0":"n","18.1":"n","18.2":"n","18.3":"n","18.4":"n","18.5-18.7":"n","26.0":"n","26.1":"n","26.2":"n","26.3":"n","26.4":"n","TP":"n"},"edge":{"131":"a","132":"a","133":"a","134":"a","135":"a","136":"a","137":"a","138":"a","139":"a","140":"a","141":"a","142":"a","143":"a","144":"a","145":"a"},"opera":{"113":"a","114":"a","115":"a","116":"a","117":"a","118":"a","119":"a","120":"a","121":"a","122":"a","123":"a","124":"a","125":"a","126":"a","127":"a"},"samsung":{"15.0":"y","16.0":"y","17.0":"y","18.0":"y","19.0":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y"},"android":{"2.1":"n","2.2":"a","2.3":"a","3":"a","4":"a","4.1":"a","4.2-4.3":"a","4.4":"n","4.4.3-4.4.4":"n","145":"y"},"and_ff":{"147":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","80":"y"},"and_chr":{"145":"y"},"ios_saf":{"17.3":"n","17.4":"n","17.5":"n","17.6-17.7":"n","18.0":"n","18.1":"n","18.2":"n","18.3":"n","18.4":"n","18.5-18.7":"n","26.0":"n","26.1":"n","26.2":"n","26.3":"n","26.4":"n"},"_notes":{"1":"Supports only the `navigator.connection.type` value which doesn't match the latest spec. [see details](https://www.davidbcalhoun.com/2010/optimizing-based-on-connection-speed-using-navigator.connection-on-android-2.2-/)","2":"Only supports the `type` value.","3":"Only supports the `type` and `downlinkMax` values.","4":"Only supports the `downlink`, `effectiveType` & `rtt` values."}},"speech-synthesis":{"chrome":{"135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y"},"firefox":{"137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y","150":"y","151":"y"},"safari":{"17.4":"y","17.5":"y","17.6":"y","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y","TP":"y"},"edge":{"131":"y","132":"y","133":"y","134":"y","135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y"},"opera":{"113":"y","114":"y","115":"y","116":"y","117":"y","118":"y","119":"y","120":"y","121":"y","122":"y","123":"y","124":"y","125":"y","126":"y","127":"y"},"samsung":{"15.0":"y","16.0":"y","17.0":"y","18.0":"y","19.0":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3-4.4.4":"n","145":"n"},"and_ff":{"147":"y"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","80":"n"},"and_chr":{"145":"y"},"ios_saf":{"17.3":"y","17.4":"y","17.5":"y","17.6-17.7":"y","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y"},"_notes":{"1":"Can be enabled in Firefox using the `media.webspeech.synth.enabled` about:config flag.","2":"Speech Synthesis in Chrome since version 55 stops playback after about 15 seconds on Windows 7 & 10, and Ubuntu 14.04, possibly other platforms"}},"speech-recognition":{"chrome":{"135":"a","136":"a","137":"a","138":"a","139":"a","140":"a","141":"a","142":"a","143":"a","144":"a","145":"a","146":"a","147":"a","148":"a","149":"a"},"firefox":{"137":"n","138":"n","139":"n","140":"n","141":"n","142":"n","143":"n","144":"n","145":"n","146":"n","147":"n","148":"n","149":"n","150":"n","151":"n"},"safari":{"17.4":"a","17.5":"a","17.6":"a","18.0":"a","18.1":"a","18.2":"a","18.3":"a","18.4":"a","18.5-18.7":"a","26.0":"a","26.1":"a","26.2":"a","26.3":"a","26.4":"a","TP":"a"},"edge":{"131":"n","132":"n","133":"n","134":"n","135":"n","136":"n","137":"n","138":"n","139":"n","140":"n","141":"n","142":"n","143":"n","144":"n","145":"n"},"opera":{"113":"n","114":"n","115":"n","116":"n","117":"n","118":"n","119":"n","120":"n","121":"n","122":"n","123":"n","124":"n","125":"n","126":"n","127":"n"},"samsung":{"15.0":"a","16.0":"a","17.0":"a","18.0":"a","19.0":"a","20":"a","21":"a","22":"a","23":"a","24":"a","25":"a","26":"a","27":"a","28":"a","29":"a"},"android":{"2.1":"n","2.2":"n","2.3":"n","3":"n","4":"n","4.1":"n","4.2-4.3":"n","4.4":"n","4.4.3-4.4.4":"n","145":"n"},"and_ff":{"147":"n"},"op_mob":{"10":"n","11":"n","11.1":"n","11.5":"n","12":"n","12.1":"n","80":"a"},"and_chr":{"145":"a"},"ios_saf":{"17.3":"a","17.4":"a","17.5":"a","17.6-17.7":"a","18.0":"a","18.1":"a","18.2":"a","18.3":"a","18.4":"a","18.5-18.7":"a","26.0":"a","26.1":"a","26.2":"a","26.3":"a","26.4":"a"},"_notes":{"1":"Partial support refers to some attributes missing.","2":"Firefox currently has a `media.webspeech.recognition.enable` flag in about:config for this, but actual support is waiting for permissions to be sorted out.","3":"Edge and Opera appear to have support for the `SpeechRecognition` API but no events for it appear to fire.","4":"Safari 14.1 and TP 119+ include prefixed support for `webkitSpeechRecognition` without support for `SpeechGrammar` or `SpeechGrammarList`. Siri needs to be enabled. [Not available in SafariViewController and web apps added to Home Screen](https://bugs.webkit.org/show_bug.cgi?id=225298#c3)."}},"touch":{"chrome":{"135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y"},"firefox":{"137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y","146":"y","147":"y","148":"y","149":"y","150":"y","151":"y"},"safari":{"17.4":"n","17.5":"n","17.6":"n","18.0":"n","18.1":"n","18.2":"n","18.3":"n","18.4":"n","18.5-18.7":"n","26.0":"n","26.1":"n","26.2":"n","26.3":"n","26.4":"n","TP":"n"},"edge":{"131":"y","132":"y","133":"y","134":"y","135":"y","136":"y","137":"y","138":"y","139":"y","140":"y","141":"y","142":"y","143":"y","144":"y","145":"y"},"opera":{"113":"y","114":"y","115":"y","116":"y","117":"y","118":"y","119":"y","120":"y","121":"y","122":"y","123":"y","124":"y","125":"y","126":"y","127":"y"},"samsung":{"15.0":"y","16.0":"y","17.0":"y","18.0":"y","19.0":"y","20":"y","21":"y","22":"y","23":"y","24":"y","25":"y","26":"y","27":"y","28":"y","29":"y"},"android":{"2.1":"y","2.2":"y","2.3":"y","3":"y","4":"y","4.1":"y","4.2-4.3":"y","4.4":"y","4.4.3-4.4.4":"y","145":"y"},"and_ff":{"147":"y"},"op_mob":{"10":"n","11":"y","11.1":"y","11.5":"y","12":"y","12.1":"y","80":"y"},"and_chr":{"145":"y"},"ios_saf":{"17.3":"y","17.4":"y","17.5":"y","17.6-17.7":"y","18.0":"y","18.1":"y","18.2":"y","18.3":"y","18.4":"y","18.5-18.7":"y","26.0":"y","26.1":"y","26.2":"y","26.3":"y","26.4":"y"},"_notes":{"1":"Can be enabled in Firefox using the dom.w3c_touch_events.enabled flag (disabled by default for site compatibility reasons)","2":"Supported on IE11 Mobile for phones with \"[Windows Phone 8.1 Update](http://blogs.msdn.com/b/ie/archive/2014/07/31/the-mobile-web-should-just-work-for-everyone.aspx)\"","3":"Can be enabled in Edge using the \"Enable touch events\" flag under `about:flags`"}}}</script>
+  <script src="https://cdn.jsdelivr.net/npm/bowser@2/es5.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

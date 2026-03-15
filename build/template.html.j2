@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pwa.gripe — What Apple Still Won't Let You Do</title>
+  <meta name="description" content="See which PWA features are supported on Chrome, Safari, and your browser.">
+  <meta name="author" content="pwa.gripe">
+  <meta name="theme-color" content="#1a1a2e">
+  <link rel="canonical" href="https://pwa.gripe/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pwa.gripe/">
+  <meta property="og:title" content="pwa.gripe — What Apple Still Won't Let You Do">
+  <meta property="og:description" content="See which PWA features are supported on Chrome, Safari, and your browser.">
+  <meta property="og:site_name" content="pwa.gripe">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="pwa.gripe — What Apple Still Won't Let You Do">
+  <meta name="twitter:description" content="See which PWA features are supported on Chrome, Safari, and your browser.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7/js/fontawesome.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7/js/solid.min.js" crossorigin="anonymous"></script>
+  <style>
+    .support-y { color: #2e7d32; }
+    .support-a { color: #f9a825; }
+    .support-n { color: #c62828; }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .support-y { color: #66bb6a; }
+      :root:not([data-theme="light"]) .support-a { color: #ffee58; }
+      :root:not([data-theme="light"]) .support-n { color: #ef5350; }
+    }
+
+    [data-theme="dark"] .support-y { color: #66bb6a; }
+    [data-theme="dark"] .support-a { color: #ffee58; }
+    [data-theme="dark"] .support-n { color: #ef5350; }
+
+    table td:nth-child(n+2),
+    table th:nth-child(n+2) {
+      text-align: center;
+    }
+
+    table svg.svg-inline--fa {
+      font-size: 1.25rem;
+    }
+
+    [data-tooltip]::before {
+      white-space: normal;
+      max-width: 80ch;
+      text-align: left;
+    }
+
+    td[data-feature] {
+      min-width: 3rem;
+    }
+
+    article {
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    #theme-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.25rem 0.5rem;
+      font-size: 1.25rem;
+      color: var(--pico-muted-color);
+      margin: 0;
+      width: auto;
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <article>
+      <nav>
+        <ul>
+          <li>
+            <hgroup>
+                <h1>pwa.gripe</h1>
+                <p>Apple's intentional crippling of Safari on iOS and iPadOS incentivizes App Store sales over improving web app features</p>
+            </hgroup>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <button id="theme-toggle" data-tooltip="Auto" data-placement="bottom" aria-label="Toggle theme">
+              <span class="fa-solid fa-circle-half-stroke">&#x25D1;</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="overflow-auto">
+        <table class="striped">
+          <thead>
+            <tr>
+              <th scope="col">Feature</th>
+              <th scope="col">Chrome {{ chrome_version }}<br><small>Android</small></th>
+              <th scope="col">Mobile Safari {{ ios_version }}<br><small>iOS/iPadOS</small></th>
+              <th scope="col" id="user-browser-header">Your Browser</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for f in features %}
+            <tr>
+              <td>{{ f.name }}</td>
+              {%- if f.chrome_support == 'y' %}
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              {%- elif f.chrome_support in ('a', 'd') %}
+              <td{% if f.chrome_note %} data-tooltip="{{ f.chrome_note|e }}"{% endif %}><span class="fa-solid fa-circle-exclamation support-a">&#x26A0;</span></td>
+              {%- else %}
+              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              {%- endif %}
+              {%- if f.ios_support == 'y' %}
+              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              {%- elif f.ios_support in ('a', 'd') %}
+              <td{% if f.ios_note %} data-tooltip="{{ f.ios_note|e }}"{% endif %}><span class="fa-solid fa-circle-exclamation support-a">&#x26A0;</span></td>
+              {%- else %}
+              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              {%- endif %}
+              <td data-feature="{{ f.id }}"{% if f.detect %} data-detect="{{ f.detect }}"{% endif %}></td>
+            </tr>
+            {%- endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <footer style="text-align:center">
+        <small>
+          Data from <a href="https://caniuse.com">caniuse.com</a> &middot;
+          Inspired by <a href="https://whatpwacando.today">whatpwacando.today</a> &middot;
+          Updated {{ updated }}  &middot;
+          <a href="https://herzog.tech/" target="_blank">&hearts; herzog.tech</a>
+        </small>
+      </footer>
+    </article>
+  </main>
+
+  <script type="application/json" id="caniuse-data">{{ stats_json }}</script>
+  <script src="https://cdn.jsdelivr.net/npm/bowser@2/es5.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
