@@ -53,6 +53,10 @@
       font-size: 1.25rem;
     }
 
+    [data-tooltip]:not(a, button, input, [role="button"]) {
+      border-bottom: none;
+    }
+
     [data-tooltip]::before {
       white-space: normal;
       max-width: 80ch;
@@ -114,7 +118,7 @@
           <tbody>
             {%- for f in features %}
             <tr{% if f.chrome_support == 'y' and f.ios_support != 'y' %} class="gripe"{% endif %}>
-              <td>{{ f.name }}</td>
+              <td data-tooltip="{{ f.description|e }}" data-placement="bottom">{% if f.mdn_url %}<a href="{{ f.mdn_url }}" target="_blank">{{ f.name }}</a>{% else %}{{ f.name }}{% endif %}</td>
               {%- if f.chrome_support == 'y' %}
               <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
               {%- elif f.chrome_support in ('a', 'd') %}

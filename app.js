@@ -13,7 +13,7 @@
 
   // Update column header
   const header = document.getElementById("user-browser-header");
-  header.innerHTML = `${browserName} ${majorVersion}<br><small>${osName}</small>`;
+  header.innerHTML = `${browserName} ${majorVersion}<br><small>${osName} (You!)</small>`;
 
   // Map Bowser browser name to caniuse key
   function mapBrowserKey() {
