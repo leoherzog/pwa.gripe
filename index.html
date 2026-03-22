@@ -25,8 +25,6 @@
   <meta name="twitter:title" content="pwa.gripe — What Apple Still Won't Let You Do">
   <meta name="twitter:description" content="See which PWA features are supported on Chrome, Safari, and your browser.">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7/js/fontawesome.min.js" crossorigin="anonymous"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7/js/solid.min.js" crossorigin="anonymous"></script>
   <style>
     .support-y { color: #2e7d32; }
     .support-a { color: #f9a825; }
@@ -49,8 +47,8 @@
       text-align: center;
     }
 
-    table svg.svg-inline--fa {
-      font-size: 1.25rem;
+    table td:nth-child(n+2) {
+      font-size: 2rem;
     }
 
     [data-tooltip]:not(a, button, input, [role="button"]) {
@@ -91,7 +89,7 @@
         <ul>
           <li>
             <hgroup>
-                <h1>pwa.gripe</h1>
+                <h1>&#x1F4F1; pwa.gripe</h1>
                 <p>Apple's intentional crippling of Safari on iOS and iPadOS is sacrificing the open web on the altar of more App Store sales</p>
             </hgroup>
           </li>
@@ -99,7 +97,7 @@
         <ul>
           <li>
             <button id="theme-toggle" data-tooltip="Auto" data-placement="bottom" aria-label="Toggle theme">
-              <span class="fa-solid fa-circle-half-stroke">&#x25D1;</span>
+              &#x25D1;
             </button>
           </li>
         </ul>
@@ -111,243 +109,243 @@
             <tr>
               <th scope="col">Feature</th>
               <th scope="col">Chrome 145<br><small>Android</small></th>
-              <th scope="col">Mobile Safari 26.4<br><small>iOS/iPadOS</small></th>
+              <th scope="col">Mobile Safari 26.4<br><small>iOS + iPadOS</small></th>
               <th scope="col" id="user-browser-header">Your Browser</th>
             </tr>
           </thead>
           <tbody>
             <tr class="gripe">
               <td data-tooltip="Expose quick actions in the app icon&#39;s context menu." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/Manifest/shortcuts" target="_blank">Shortcuts</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-n">&#x2718;</span></td>
               <td data-feature="shortcuts"></td>
             </tr>
             <tr class="gripe">
               <td data-tooltip="Register the app as a handler for custom URL protocols." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Navigator/registerProtocolHandler" target="_blank">Protocol Handling</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-n">&#x2718;</span></td>
               <td data-feature="protocol-handling" data-detect="'registerProtocolHandler' in navigator"></td>
             </tr>
             <tr class="gripe">
               <td data-tooltip="Open files from the OS directly in the installed web app." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/How_to/Associate_files_with_your_PWA" target="_blank">File Handling</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-n">&#x2718;</span></td>
               <td data-feature="file-handling" data-detect="'launchQueue' in window"></td>
             </tr>
             <tr class="gripe">
               <td data-tooltip="Let the user select contacts from their device address book." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Contact_Picker_API" target="_blank">Contact Picker</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-n">&#x2718;</span></td>
               <td data-feature="contact-picker" data-detect="'contacts' in navigator"></td>
             </tr>
             <tr class="gripe">
               <td data-tooltip="Detect faces in images using the platform&#39;s native detector." data-placement="bottom"><a href="https://wicg.github.io/shape-detection-api/#face-detection-api" target="_blank">Face Detection</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-n">&#x2718;</span></td>
               <td data-feature="face-detection" data-detect="'FaceDetector' in window"></td>
             </tr>
             <tr class="gripe">
               <td data-tooltip="Trigger haptic vibration patterns on the device." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Vibration_API" target="_blank">Vibration</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-n">&#x2718;</span></td>
               <td data-feature="vibration" data-detect="'vibrate' in navigator"></td>
             </tr>
             <tr class="gripe">
               <td data-tooltip="Restrict a screen capture stream to a specific DOM element." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Screen_Capture_API/Element_Region_Capture" target="_blank">Element Capture</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-n">&#x2718;</span></td>
               <td data-feature="element-capture" data-detect="'CaptureController' in window"></td>
             </tr>
             <tr class="gripe">
               <td data-tooltip="Defer actions until the device has a stable network connection." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Background_Synchronization_API" target="_blank">Background Sync</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-n">&#x2718;</span></td>
               <td data-feature="background-sync" data-detect="'SyncManager' in window"></td>
             </tr>
             <tr class="gripe">
               <td data-tooltip="Download or upload large files in the background, surviving page close." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Background_Fetch_API" target="_blank">Background Fetch</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-n">&#x2718;</span></td>
               <td data-feature="background-fetch" data-detect="'BackgroundFetchManager' in window"></td>
             </tr>
             <tr class="gripe">
               <td data-tooltip="Communicate with nearby Bluetooth Low Energy devices." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API" target="_blank">Bluetooth</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-n">&#x2718;</span></td>
               <td data-feature="web-bluetooth" data-detect="'bluetooth' in navigator"></td>
             </tr>
             <tr class="gripe">
               <td data-tooltip="Read and write NFC tags when the device is held close." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_NFC_API" target="_blank">NFC</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-n">&#x2718;</span></td>
               <td data-feature="webnfc" data-detect="'NDEFReader' in window"></td>
             </tr>
             <tr>
               <td data-tooltip="Render augmented or virtual reality experiences using headsets or cameras." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/WebXR_Device_API" target="_blank">AR / VR</a></td>
-              <td data-tooltip="This API is very extensive. Many of its features are still in development and/or don&#39;t have finalised specs yet."><span class="fa-solid fa-circle-exclamation support-a">&#x26A0;</span></td>
-              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td data-tooltip="This API is very extensive. Many of its features are still in development and/or don&#39;t have finalised specs yet."><span class="support-a">&#x26A0;</span></td>
+              <td><span class="support-n">&#x2718;</span></td>
               <td data-feature="webxr" data-detect="'xr' in navigator"></td>
             </tr>
             <tr class="gripe">
               <td data-tooltip="Query the device&#39;s network connection type and effective speed." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Network_Information_API" target="_blank">Network Info</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-n">&#x2718;</span></td>
               <td data-feature="netinfo" data-detect="'connection' in navigator"></td>
             </tr>
             <tr class="gripe">
               <td data-tooltip="Add the app to the home screen and launch it like a native app." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Making_PWAs_installable" target="_blank">Installation</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-exclamation support-a">&#x26A0;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-a">&#x26A0;</span></td>
               <td data-feature="installation" data-detect="'BeforeInstallPromptEvent' in window"></td>
             </tr>
             <tr>
               <td data-tooltip="Cache resources and serve content without a network connection." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API" target="_blank">Offline Support</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
               <td data-feature="serviceworkers" data-detect="'serviceWorker' in navigator"></td>
             </tr>
             <tr class="gripe">
               <td data-tooltip="Show system-level notifications outside the browser tab." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Notifications_API" target="_blank">Notifications</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td data-tooltip="Requires website to first be added to the Home Screen"><span class="fa-solid fa-circle-exclamation support-a">&#x26A0;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td data-tooltip="Requires website to first be added to the Home Screen"><span class="support-a">&#x26A0;</span></td>
               <td data-feature="notifications" data-detect="'Notification' in window"></td>
             </tr>
             <tr class="gripe">
               <td data-tooltip="Receive push messages from a server even when the app is closed." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Push_API" target="_blank">Web Push</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td data-tooltip="Requires website to first be added to the Home Screen."><span class="fa-solid fa-circle-exclamation support-a">&#x26A0;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td data-tooltip="Requires website to first be added to the Home Screen."><span class="support-a">&#x26A0;</span></td>
               <td data-feature="push-api" data-detect="'PushManager' in window"></td>
             </tr>
             <tr>
               <td data-tooltip="Animate seamless transitions between DOM states or page navigations." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API" target="_blank">View Transitions</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
               <td data-feature="view-transitions" data-detect="'startViewTransition' in document"></td>
             </tr>
             <tr>
               <td data-tooltip="Access the device&#39;s GPS or network-based location." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API" target="_blank">Geolocation</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
               <td data-feature="geolocation" data-detect="'geolocation' in navigator"></td>
             </tr>
             <tr>
               <td data-tooltip="Access the camera and microphone for audio/video capture." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Media_Capture_and_Streams_API" target="_blank">Media Capture</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
               <td data-feature="stream" data-detect="'mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices"></td>
             </tr>
             <tr>
               <td data-tooltip="Float a video in a small overlay window above other content." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Picture-in-Picture_API" target="_blank">Picture-in-Picture</a></td>
-              <td data-tooltip="Automatically plays fullscreen videos in Picture-in-Picture mode after user hits Home Screen button. Only Android 8.0 Oreo and newer provide appropriate API for Picture-in-Picture."><span class="fa-solid fa-circle-exclamation support-a">&#x26A0;</span></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td data-tooltip="Automatically plays fullscreen videos in Picture-in-Picture mode after user hits Home Screen button. Only Android 8.0 Oreo and newer provide appropriate API for Picture-in-Picture."><span class="support-a">&#x26A0;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
               <td data-feature="picture-in-picture" data-detect="document.pictureInPictureEnabled"></td>
             </tr>
             <tr>
               <td data-tooltip="Read and write files directly on the user&#39;s local file system." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/File_System_API" target="_blank">File System</a></td>
-              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
-              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td><span class="support-n">&#x2718;</span></td>
+              <td><span class="support-n">&#x2718;</span></td>
               <td data-feature="native-filesystem-api" data-detect="'showOpenFilePicker' in window"></td>
             </tr>
             <tr>
               <td data-tooltip="Compress and decompress data streams using gzip or deflate." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Compression_Streams_API" target="_blank">Compression Streams</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
               <td data-feature="compression-streams" data-detect="'CompressionStream' in window"></td>
             </tr>
             <tr>
               <td data-tooltip="Sign in with biometrics, security keys, or passkeys." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Authentication_API" target="_blank">Authentication</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
               <td data-feature="webauthn" data-detect="'PublicKeyCredential' in window"></td>
             </tr>
             <tr>
               <td data-tooltip="Share text, URLs, or files using the native share sheet." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Share_API" target="_blank">Web Share</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
               <td data-feature="web-share" data-detect="'share' in navigator"></td>
             </tr>
             <tr>
               <td data-tooltip="Control on-screen keyboard visibility and layout behavior." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/VirtualKeyboard_API" target="_blank">Virtual Keyboard</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
               <td data-feature="virtual-keyboard" data-detect="'virtualKeyboard' in navigator"></td>
             </tr>
             <tr class="gripe">
               <td data-tooltip="Detect and decode barcodes and QR codes from images or camera feeds." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Barcode_Detection_API" target="_blank">Barcode Detection</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-exclamation support-a">&#x26A0;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-a">&#x26A0;</span></td>
               <td data-feature="barcode-detection" data-detect="'BarcodeDetector' in window"></td>
             </tr>
             <tr>
               <td data-tooltip="Record audio or video from a media stream." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaStream_Recording_API" target="_blank">Audio Recording</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
               <td data-feature="mediarecorder" data-detect="'MediaRecorder' in window"></td>
             </tr>
             <tr>
               <td data-tooltip="Customize media playback controls in the OS notification area." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Media_Session_API" target="_blank">Media Session</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
               <td data-feature="media-session" data-detect="'mediaSession' in navigator"></td>
             </tr>
             <tr>
               <td data-tooltip="Declare audio session type to coordinate with other audio sources." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioSession" target="_blank">Audio Session</a></td>
-              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
-              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td><span class="support-n">&#x2718;</span></td>
+              <td><span class="support-n">&#x2718;</span></td>
               <td data-feature="audio-session" data-detect="'audioSession' in navigator"></td>
             </tr>
             <tr>
               <td data-tooltip="Capture the contents of a screen, window, or tab as a media stream." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Screen_Capture_API" target="_blank">Screen Capturing</a></td>
-              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
-              <td><span class="fa-solid fa-circle-xmark support-n">&#x2718;</span></td>
+              <td><span class="support-n">&#x2718;</span></td>
+              <td><span class="support-n">&#x2718;</span></td>
               <td data-feature="mdn-api_mediadevices_getdisplaymedia" data-detect="'getDisplayMedia' in navigator.mediaDevices"></td>
             </tr>
             <tr>
               <td data-tooltip="Store large amounts of structured data locally in the browser." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API" target="_blank">Storage</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
               <td data-feature="indexeddb" data-detect="'indexedDB' in window"></td>
             </tr>
             <tr>
               <td data-tooltip="Invoke the browser&#39;s built-in payment UI for checkout flows." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Payment_Request_API" target="_blank">Payment</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
               <td data-feature="payment-request" data-detect="'PaymentRequest' in window"></td>
             </tr>
             <tr>
               <td data-tooltip="Prevent the screen from dimming or locking while the app is active." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Screen_Wake_Lock_API" target="_blank">Wake Lock</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
               <td data-feature="wake-lock" data-detect="'wakeLock' in navigator"></td>
             </tr>
             <tr>
               <td data-tooltip="Read the device&#39;s compass heading, tilt, and rotation." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Device_orientation_events" target="_blank">Orientation</a></td>
-              <td><span class="fa-solid fa-circle-exclamation support-a">&#x26A0;</span></td>
-              <td><span class="fa-solid fa-circle-exclamation support-a">&#x26A0;</span></td>
+              <td><span class="support-a">&#x26A0;</span></td>
+              <td><span class="support-a">&#x26A0;</span></td>
               <td data-feature="deviceorientation" data-detect="'DeviceOrientationEvent' in window"></td>
             </tr>
             <tr>
               <td data-tooltip="Read accelerometer and gyroscope data for motion sensing." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/DeviceMotionEvent" target="_blank">Motion</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
               <td data-feature="motion" data-detect="'DeviceMotionEvent' in window"></td>
             </tr>
             <tr>
               <td data-tooltip="Convert text to spoken audio using the platform&#39;s voices." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis" target="_blank">Speech Synthesis</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
               <td data-feature="speech-synthesis" data-detect="'speechSynthesis' in window"></td>
             </tr>
             <tr>
               <td data-tooltip="Transcribe spoken words into text in real time." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition" target="_blank">Speech Recognition</a></td>
-              <td data-tooltip="Partial support refers to some attributes missing."><span class="fa-solid fa-circle-exclamation support-a">&#x26A0;</span></td>
-              <td data-tooltip="Safari 14.1 and TP 119+ include prefixed support for `webkitSpeechRecognition` without support for `SpeechGrammar` or `SpeechGrammarList`. Siri needs to be enabled. Not available in SafariViewController and web apps added to Home Screen."><span class="fa-solid fa-circle-exclamation support-a">&#x26A0;</span></td>
+              <td data-tooltip="Partial support refers to some attributes missing."><span class="support-a">&#x26A0;</span></td>
+              <td data-tooltip="Safari 14.1 and TP 119+ include prefixed support for `webkitSpeechRecognition` without support for `SpeechGrammar` or `SpeechGrammarList`. Siri needs to be enabled. Not available in SafariViewController and web apps added to Home Screen."><span class="support-a">&#x26A0;</span></td>
               <td data-feature="speech-recognition" data-detect="'SpeechRecognition' in window || 'webkitSpeechRecognition' in window"></td>
             </tr>
             <tr>
               <td data-tooltip="Respond to multi-finger touch gestures on the screen." data-placement="bottom"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Touch_events" target="_blank">Multi Touch</a></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
-              <td><span class="fa-solid fa-circle-check support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
+              <td><span class="support-y">&#x2714;</span></td>
               <td data-feature="touch" data-detect="'ontouchstart' in window"></td>
             </tr>
           </tbody>

@@ -36,7 +36,7 @@ If no caniuse ID exists, add an entry to `HARDCODED` for Chrome/Safari values. T
 ## Key Details
 
 - CSS framework: Pico CSS v2 (CDN)
-- Icons: Font Awesome 7 (CDN, SVG/JS) with Unicode fallback text — note FA replaces `<span>` with `<svg>`, so dynamic icon changes must create new spans (FA's MutationObserver auto-converts them)
+- Icons: Unicode characters (✔ ✘ ⚠ ◐)
 - UA parsing: Bowser v2 (CDN)
 - All iOS/iPadOS browsers map to `ios_saf` (WebKit requirement)
 - Support values: `y` (supported), `a` (partial), `n` (no), `d` (behind flag), `u` (unknown)

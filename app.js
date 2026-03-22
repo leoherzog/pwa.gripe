@@ -94,20 +94,22 @@
   // Create support icon and set tooltip on the parent td
   function createIcon(td, support, tooltip) {
     const span = document.createElement("span");
-    span.classList.add("fa-solid");
 
     switch (support) {
       case "y":
-        span.classList.add("fa-circle-check", "support-y");
+        span.className = "support-y";
         span.textContent = "\u2714";
         break;
       case "a":
       case "d":
-        span.classList.add("fa-circle-exclamation", "support-a");
+        span.className = "support-a";
         span.textContent = "\u26A0";
         break;
+      case "u":
+        span.textContent = "\u2753";
+        break;
       default:
-        span.classList.add("fa-circle-xmark", "support-n");
+        span.className = "support-n";
         span.textContent = "\u2718";
     }
 
@@ -169,9 +171,9 @@
   // Theme switcher
   var themes = ["auto", "light", "dark"];
   var icons = {
-    auto:  { fa: "fa-circle-half-stroke", text: "\u25D1", label: "Auto" },
-    light: { fa: "fa-sun",                text: "\u2600", label: "Light" },
-    dark:  { fa: "fa-moon",               text: "\u263E", label: "Dark" },
+    auto:  { text: "\u25D1", label: "Auto" },
+    light: { text: "\u2600", label: "Light" },
+    dark:  { text: "\u263E", label: "Dark" },
   };
   var toggle = document.getElementById("theme-toggle");
   var current = localStorage.getItem("theme") || "auto";
@@ -184,10 +186,7 @@
       document.documentElement.setAttribute("data-theme", value);
     }
     var icon = icons[value];
-    var span = document.createElement("span");
-    span.className = "fa-solid " + icon.fa;
-    span.textContent = icon.text;
-    toggle.replaceChildren(span);
+    toggle.textContent = icon.text;
     toggle.setAttribute("data-tooltip", icon.label);
     toggle.setAttribute("aria-label", icon.label + " theme");
     localStorage.setItem("theme", value);
