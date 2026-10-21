@@ -61,10 +61,6 @@
       text-align: left;
     }
 
-    td[data-feature] {
-      min-width: 3rem;
-    }
-
     article {
       max-width: 1200px;
       margin: auto;
@@ -110,7 +106,7 @@
               <th scope="col">Feature</th>
               <th scope="col">Chrome {{ chrome_version }}<br><small>Android</small></th>
               <th scope="col">Mobile Safari {{ ios_version }}<br><small>iOS + iPadOS</small></th>
-              <th scope="col" id="user-browser-header">Your Browser</th>
+              <th scope="col">Your Browser</th>
             </tr>
           </thead>
           <tbody>
@@ -131,7 +127,11 @@
               {%- else %}
               <td><span class="support-n">&#x2718;</span></td>
               {%- endif %}
-              <td data-feature="{{ f.id }}"{% if f.detect %} data-detect="{{ f.detect }}"{% endif %}></td>
+              {%- if f.detect %}
+              <td data-detect="{{ f.detect|e }}"></td>
+              {%- else %}
+              <td><span class="support-u" role="img" aria-label="Unknown: not detectable from JavaScript" data-tooltip="Not detectable from JavaScript" tabindex="0">?</span></td>
+              {%- endif %}
             </tr>
             {%- endfor %}
           </tbody>
@@ -149,8 +149,6 @@
     </article>
   </main>
 
-  <script type="application/json" id="caniuse-data">{{ stats_json }}</script>
-  <script src="https://cdn.jsdelivr.net/npm/bowser@2/es5.js"></script>
   <script src="app.js"></script>
   <script>navigator.serviceWorker?.register("/sw.js");</script>
 </body>

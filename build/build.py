@@ -4,7 +4,6 @@
 # ///
 """Download caniuse data and render index.html from Jinja template."""
 
-import json
 from datetime import date, timezone
 from pathlib import Path
 
@@ -157,15 +156,6 @@ HARDCODED = {
     "Motion":                     {"and_chr": "y", "ios_saf": "y"},
 }
 
-# Browsers to include in runtime stats (for "Your Browser" column)
-RUNTIME_BROWSERS = [
-    "chrome", "firefox", "safari", "edge", "opera",
-    "samsung", "android", "and_ff", "op_mob",
-]
-
-MAX_VERSIONS = 15  # keep last N versions per browser
-
-
 def normalize_support(val: str | None) -> str:
     """Strip note refs: 'y #1' -> 'y', 'a #2 #3' -> 'a'."""
     if not val:
@@ -210,12 +200,6 @@ def get_latest_support(version_map: dict[str, str]) -> str:
     return normalize_support(get_latest_raw(version_map))
 
 
-def trim_versions(version_map: dict[str, str], n: int = MAX_VERSIONS) -> dict[str, str]:
-    """Keep only the last n versions, normalize support values."""
-    items = list(version_map.items())[-n:]
-    return {ver: normalize_support(sup) for ver, sup in items}
-
-
 def main():
     print("Downloading caniuse data...")
     resp = requests.get(CANIUSE_URL, timeout=30)
@@ -229,7 +213,6 @@ def main():
     ios_saf_latest = list(agents.get("ios_saf", {}).get("version_list", [{}]))[-1].get("version", "?")
 
     features_out = []
-    runtime_stats = {}  # feature_id -> {browser_key: {version: support}}
 
     for display_name, caniuse_id, detect_expr, mdn_url, description in FEATURES:
         feature_id = (caniuse_id or display_name.lower().replace(" ", "-").replace("/", "-"))
@@ -254,22 +237,6 @@ def main():
                 chrome_note = resolve_notes(get_latest_raw(chrome_map), notes_by_num)
             if ios_support in ("a", "d"):
                 ios_note = resolve_notes(get_latest_raw(ios_map), notes_by_num)
-
-            # Build runtime stats for user browser lookup
-            rt = {}
-            for browser_key in RUNTIME_BROWSERS:
-                browser_stats = stats.get(browser_key, {})
-                if browser_stats:
-                    rt[browser_key] = trim_versions(browser_stats)
-            # Also include and_chr and ios_saf for completeness
-            for bk in ("and_chr", "ios_saf"):
-                bs = stats.get(bk, {})
-                if bs:
-                    rt[bk] = trim_versions(bs)
-            # Include notes for runtime tooltip use
-            if notes_by_num:
-                rt["_notes"] = notes_by_num
-            runtime_stats[feature_id] = rt
         else:
             # Use hardcoded values
             hc = HARDCODED.get(display_name, {"and_chr": "u", "ios_saf": "u"})
@@ -305,7 +272,6 @@ def main():
 
     html = template.render(
         features=features_out,
-        stats_json=json.dumps(runtime_stats, separators=(",", ":")),
         updated=date.today().isoformat(),
         chrome_version=and_chr_latest,
         ios_version=ios_saf_latest,
