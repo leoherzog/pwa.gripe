@@ -1,11 +1,11 @@
 {%- macro support_cell(value, note) %}
-              {%- if value == 'y' %}
-              <td><span class="support-y">&#x2714;</span></td>
-              {%- elif value == 'a' %}
-              <td{% if note %} data-tooltip="{{ note }}"{% endif %}><span class="support-a">&#x26A0;</span></td>
-              {%- else %}
-              <td><span class="support-n">&#x2718;</span></td>
-              {%- endif %}
+              <td>
+                {%- if value == 'y' %}<span class="support-y" role="img" aria-label="Supported">&#x2714;&#xFE0E;</span>
+                {%- elif note %}<span class="support-a" role="img" aria-label="Partial support: {{ note }}" data-tooltip="{{ note }}" tabindex="0">&#x26A0;&#xFE0E;</span>
+                {%- elif value == 'a' %}<span class="support-a" role="img" aria-label="Partial support">&#x26A0;&#xFE0E;</span>
+                {%- else %}<span class="support-n" role="img" aria-label="Not supported">&#x2718;</span>
+                {%- endif -%}
+              </td>
 {%- endmacro -%}
 <!DOCTYPE html>
 <html lang="en">
@@ -14,8 +14,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>pwa.gripe — What Apple Still Won't Let You Do</title>
   <meta name="description" content="See which PWA features are supported on Chrome, Safari, and your browser.">
-  <meta name="author" content="pwa.gripe">
-  <meta name="theme-color" content="#1a1a2e">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#13171f">
   <link rel="canonical" href="https://pwa.gripe/">
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
@@ -26,64 +27,69 @@
   <meta property="og:url" content="https://pwa.gripe/">
   <meta property="og:title" content="pwa.gripe — What Apple Still Won't Let You Do">
   <meta property="og:description" content="See which PWA features are supported on Chrome, Safari, and your browser.">
+  <meta property="og:image" content="https://pwa.gripe/icons/icon-512.png">
+  <meta property="og:image:alt" content="pwa.gripe app icon">
   <meta property="og:site_name" content="pwa.gripe">
   <meta property="og:locale" content="en_US">
-
-  <!-- Twitter / X -->
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="pwa.gripe — What Apple Still Won't Let You Do">
-  <meta name="twitter:description" content="See which PWA features are supported on Chrome, Safari, and your browser.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
-  <style>
-    .support-y { color: #2e7d32; }
-    .support-a { color: #f9a825; }
-    .support-n { color: #c62828; }
 
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme="light"]) .support-y { color: #66bb6a; }
-      :root:not([data-theme="light"]) .support-a { color: #ffee58; }
-      :root:not([data-theme="light"]) .support-n { color: #ef5350; }
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.1.1/css/pico.min.css" integrity="sha384-L1dWfspMTHU/ApYnFiMz2QID/PlP1xCW9visvBdbEkOLkSSWsP6ZJWhPw6apiXxU" crossorigin="anonymous">
+  <script>
+    // Applies a saved theme before first paint; app.js runs the toggle.
+    try {
+      const theme = localStorage.getItem("theme");
+      if (theme === "light" || theme === "dark") document.documentElement.dataset.theme = theme;
+    } catch {}
+  </script>
+  <style>
+    @media (max-width: 575.98px) {
+      :root { --pico-spacing: 0.5rem; }
     }
 
-    [data-theme="dark"] .support-y { color: #66bb6a; }
-    [data-theme="dark"] .support-a { color: #ffee58; }
-    [data-theme="dark"] .support-n { color: #ef5350; }
+    .support-y { color: var(--pico-ins-color); }
+    .support-a { color: light-dark(#977000, #ffbf00); }
+    .support-n { color: var(--pico-del-color); }
+    .support-u { color: var(--pico-muted-color); }
 
-    tr.gripe td { background-color: color-mix(in srgb, var(--pico-del-color) 10%, var(--pico-background-color)); }
+    tr.gripe > * { background-color: color-mix(in srgb, var(--pico-del-color) 10%, var(--pico-background-color)); }
 
-    table td:nth-child(n+2),
-    table th:nth-child(n+2) {
+    td,
+    thead th:not(:first-child) {
       text-align: center;
     }
 
-    table td:nth-child(n+2) {
+    td {
       font-size: 2rem;
     }
 
-    [data-tooltip]:not(a, button, input, [role="button"]) {
-      border-bottom: none;
+    /* Long feature names would otherwise push Your Browser off 360px screens. */
+    tbody th {
+      hyphens: auto;
+      overflow-wrap: anywhere;
     }
 
+    /* Pico sizes tooltips to half their host; let them grow to a readable width instead. */
     [data-tooltip]::before {
+      width: max-content;
+      max-width: min(40ch, 50vw);
       white-space: normal;
-      max-width: 80ch;
-      text-align: left;
+      text-align: start;
     }
 
     article {
       max-width: 1200px;
-      margin: auto;
+      margin-inline: auto;
+    }
+
+    article > footer {
+      text-align: center;
     }
 
     #theme-toggle {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0.25rem 0.5rem;
+      --pico-background-color: transparent;
+      --pico-border-color: transparent;
+      --pico-color: var(--pico-muted-color);
       font-size: 1.25rem;
-      color: var(--pico-muted-color);
-      margin: 0;
-      width: auto;
     }
   </style>
 </head>
@@ -101,9 +107,7 @@
         </ul>
         <ul>
           <li>
-            <button id="theme-toggle" data-tooltip="Auto" data-placement="bottom" aria-label="Toggle theme">
-              &#x25D1;
-            </button>
+            <button id="theme-toggle" data-tooltip="Theme: Auto" data-placement="left" aria-label="Theme: Auto. Switch to Light">&#x25D1;</button>
           </li>
         </ul>
       </nav>
@@ -121,13 +125,13 @@
           <tbody>
             {%- for f in features %}
             <tr{% if f.group == 0 %} class="gripe"{% endif %}>
-              <td data-tooltip="{{ f.description }}" data-placement="bottom"><a href="{{ f.url }}" target="_blank">{{ f.name }}</a></td>
+              <th scope="row"><a href="{{ f.url }}" target="_blank">{{ f.name }}</a><br><small>{{ f.description }}</small></th>
               {{- support_cell(f.android, f.android_note) }}
               {{- support_cell(f.ios, f.ios_note) }}
               {%- if f.detect %}
               <td data-detect="{{ f.detect }}"></td>
               {%- else %}
-              <td><span class="support-u" role="img" aria-label="Unknown: not detectable from JavaScript" data-tooltip="Not detectable from JavaScript" tabindex="0">?</span></td>
+              <td><span class="support-u" role="img" aria-label="Unknown: not detectable from JavaScript" data-tooltip="Not detectable from JavaScript" data-placement="left" tabindex="0">?</span></td>
               {%- endif %}
             </tr>
             {%- endfor %}
@@ -135,7 +139,7 @@
         </table>
       </div>
 
-      <footer style="text-align:center">
+      <footer>
         <small>
           Data from <a href="https://caniuse.com">caniuse.com</a> &middot;
           Inspired by <a href="https://whatpwacando.today">whatpwacando.today</a> &middot;
@@ -146,7 +150,6 @@
     </article>
   </main>
 
-  <script src="app.js"></script>
-  <script>navigator.serviceWorker?.register("/sw.js");</script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
