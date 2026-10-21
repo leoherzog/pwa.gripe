@@ -165,7 +165,7 @@ FEATURES = [
             caniuse="speech-recognition", detect="'SpeechRecognition' in window || 'webkitSpeechRecognition' in window"),
     Feature("Multi Touch", "Respond to multi-finger touch gestures on the screen.",
             f"{MDN}/Web/API/Touch_events",
-            caniuse="touch", detect="'ontouchstart' in window"),
+            caniuse="touch", detect="'TouchEvent' in window"),
 ]
 
 
