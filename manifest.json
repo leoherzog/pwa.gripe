@@ -5,12 +5,10 @@
   "id": "/",
   "start_url": "/",
   "scope": "/",
-  "display_override": ["window-controls-overlay", "standalone"],
   "display": "standalone",
-  "orientation": "any",
   "theme_color": "#1a1a2e",
   "background_color": "#1a1a2e",
-  "categories": ["utilities", "developer tools"],
+  "categories": ["utilities"],
   "icons": [
     {
       "src": "/icons/icon.svg",
@@ -40,15 +38,23 @@
       "purpose": "maskable"
     }
   ],
+  "screenshots": [
+    {
+      "src": "/screenshots/narrow.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "PWA feature support table on a phone"
+    },
+    {
+      "src": "/screenshots/wide.png",
+      "sizes": "1280x800",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "PWA feature support table on a desktop"
+    }
+  ],
   "launch_handler": {
     "client_mode": "focus-existing"
-  },
-  "handle_links": "preferred",
-  "share_target": {
-    "action": "/",
-    "method": "GET",
-    "params": {
-      "url": "url"
-    }
   }
 }

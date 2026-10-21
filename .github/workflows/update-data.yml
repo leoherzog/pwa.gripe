@@ -38,7 +38,7 @@ jobs:
         with:
           enable-cache: false
       - run: uv run build/build.py
-      - run: mkdir _site && cp -r index.html app.js sw.js manifest.json icons _site/
+      - run: mkdir _site && cp -r index.html app.js sw.js manifest.json icons screenshots _site/
       - uses: actions/upload-pages-artifact@v5
       - name: Deploy to GitHub Pages
         id: deploy
