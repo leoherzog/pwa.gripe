@@ -4,39 +4,40 @@ This file provides guidance to Claude Code, Codex, Gemini, etc when working with
 
 ## What This Is
 
-pwa.gripe is a static site that shows PWA feature support across browsers (Chrome Android, Safari iOS, and the visitor's own browser). The "Your Browser" column prefers runtime feature detection via JavaScript, falling back to caniuse data only when no detect expression exists.
+pwa.gripe is a static site that shows PWA feature support across Chrome Android, Safari iOS, and the visitor's own browser. The fixed columns come from caniuse data at build time. The "Your Browser" column comes from runtime feature detection in JavaScript.
 
 ## Build
-
-The site is built with a Python script that fetches caniuse data and renders `index.html` from a Jinja2 template:
 
 ```bash
 uv run build/build.py
 ```
 
-This requires Python 3.12+ and uses inline script metadata (PEP 723) so `uv run` handles dependencies automatically (`requests`, `jinja2`).
-
-There is no npm/node toolchain, no bundler, no test suite, and no linter.
+This downloads caniuse `data-2.0.json` and renders `index.html`. It needs Python 3.12+; inline script metadata (PEP 723) lets `uv run` install Jinja2. There is no npm/node toolchain, bundler, test suite, or linter.
 
 ## Architecture
 
-- **`build/build.py`** — Build script. Downloads caniuse `data-2.0.json`, extracts support data for each feature (including `notes_by_num` footnotes for partial-support tooltips), and renders the template. The `FEATURES` list defines all tracked features as `(display_name, caniuse_id, detect_expression)` tuples. Features without a caniuse ID use the `HARDCODED` dict for Chrome/Safari support values.
-- **`build/template.html.j2`** — Jinja2 template for `index.html`. Renders the feature table with static Chrome/Safari columns, embeds trimmed caniuse stats (with `_notes`) as a JSON blob (`<script type="application/json" id="caniuse-data">`), and uses Pico CSS `data-tooltip` for caniuse footnotes on partial-support entries.
-- **`index.html`** — Generated output (do not edit directly; re-run `build/build.py`).
-- **`app.js`** — Client-side JS (vanilla, no framework). Prefers runtime `detect` expressions for the "Your Browser" column, falling back to Bowser UA parsing + caniuse JSON lookup. Resolves caniuse footnotes as tooltips for partial-support results. Also handles the theme toggle (cycles auto/light/dark).
+- **`build/build.py`**: the `FEATURES` list of `Feature` records and the build. Fixed columns read each browser's `current_version` in caniuse, not the newest listed version, which may be unreleased. Partial support carries the caniuse footnotes as a tooltip. The build fails on an unknown caniuse id.
+- **`build/template.html.j2`**: renders the table with Pico CSS. Feature names are row headers with their description as visible text. A small inline head script applies the saved theme before first paint.
+- **`index.html`**: generated and untracked. Never edit it; re-run the build.
+- **`app.js`**: ES module. Evaluates each `data-detect` expression to fill the "Your Browser" column, runs the auto/light/dark theme toggle, and registers the service worker.
+- **`sw.js`**: network-first for same-origin requests, cache-first for the pinned Pico stylesheet. Bump `CACHE_NAME` when `PRECACHE` changes.
+- **`manifest.json`**, **`icons/`**, **`screenshots/`**: install metadata. Regenerate the screenshots when the layout changes noticeably.
+- **`.github/workflows/update-data.yml`**: rebuilds and deploys to GitHub Pages on push and weekly. A keepalive job re-enables the workflow so GitHub does not disable the schedule. Only the files copied into `_site/` are published.
 
 ## Adding a New Feature
 
-Add a tuple to the `FEATURES` list in `build/build.py`:
+Add a `Feature` to `FEATURES` in `build/build.py`:
+
 ```python
-("Display Name", "caniuse-id-or-None", "'SomeAPI' in window")
+Feature("Display Name", "One-sentence description.", f"{MDN}/Web/API/Some_API",
+        caniuse="caniuse-id", detect="'SomeAPI' in window"),
 ```
-If no caniuse ID exists, add an entry to `HARDCODED` for Chrome/Safari values. Then re-run the build.
+
+Without a caniuse id, set both `android` and `ios`. Setting either on a caniuse feature overrides caniuse for that column, for when its data is stale. Leave `detect` out only when no JavaScript check exists; the cell then shows unknown. Re-run the build.
 
 ## Key Details
 
-- CSS framework: Pico CSS v2 (CDN)
-- Icons: Unicode characters (✔ ✘ ⚠ ◐)
-- UA parsing: Bowser v2 (CDN)
-- All iOS/iPadOS browsers map to `ios_saf` (WebKit requirement)
-- Support values: `y` (supported), `a` (partial), `n` (no), `d` (behind flag), `u` (unknown)
+- CSS: Pico CSS 2.1.1 from jsDelivr, pinned with SRI. Prefer Pico classes, elements and variables over custom CSS.
+- Icons: Unicode ✔ ✘ ⚠ ?, with U+FE0E after ✔, ⚠ and ☀ so they render as recolorable text, not emoji.
+- Support values: `y` (supported), `a` (partial), `n` (no). Flagged, polyfill-only and unknown caniuse values count as `n`.
+- Detect expressions run in the page and return true or false. One that fails to compile shows unknown and logs an error.
