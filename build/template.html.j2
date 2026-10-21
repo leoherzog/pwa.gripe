@@ -42,8 +42,10 @@
     } catch {}
   </script>
   <style>
+    /* Header words set the icon columns' minimum width, so phones need smaller headers to fit 360px. */
     @media (max-width: 575.98px) {
       :root { --pico-spacing: 0.5rem; }
+      thead { font-size: 0.8125rem; }
     }
 
     .support-y { color: var(--pico-ins-color); }
@@ -62,8 +64,8 @@
       font-size: 2rem;
     }
 
-    /* Long feature names would otherwise push Your Browser off 360px screens. */
-    tbody th {
+    /* Descriptions may break anywhere so the column can shrink; feature names stay whole. */
+    tbody th small {
       hyphens: auto;
       overflow-wrap: anywhere;
     }
