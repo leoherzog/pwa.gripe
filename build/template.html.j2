@@ -1,3 +1,12 @@
+{%- macro support_cell(value, note) %}
+              {%- if value == 'y' %}
+              <td><span class="support-y">&#x2714;</span></td>
+              {%- elif value == 'a' %}
+              <td{% if note %} data-tooltip="{{ note }}"{% endif %}><span class="support-a">&#x26A0;</span></td>
+              {%- else %}
+              <td><span class="support-n">&#x2718;</span></td>
+              {%- endif %}
+{%- endmacro -%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -104,31 +113,19 @@
           <thead>
             <tr>
               <th scope="col">Feature</th>
-              <th scope="col">Chrome {{ chrome_version }}<br><small>Android</small></th>
+              <th scope="col">Chrome {{ android_version }}<br><small>Android</small></th>
               <th scope="col">Mobile Safari {{ ios_version }}<br><small>iOS + iPadOS</small></th>
               <th scope="col">Your Browser</th>
             </tr>
           </thead>
           <tbody>
             {%- for f in features %}
-            <tr{% if f.chrome_support == 'y' and f.ios_support != 'y' %} class="gripe"{% endif %}>
-              <td data-tooltip="{{ f.description|e }}" data-placement="bottom">{% if f.mdn_url %}<a href="{{ f.mdn_url }}" target="_blank">{{ f.name }}</a>{% else %}{{ f.name }}{% endif %}</td>
-              {%- if f.chrome_support == 'y' %}
-              <td><span class="support-y">&#x2714;</span></td>
-              {%- elif f.chrome_support in ('a', 'd') %}
-              <td{% if f.chrome_note %} data-tooltip="{{ f.chrome_note|e }}"{% endif %}><span class="support-a">&#x26A0;</span></td>
-              {%- else %}
-              <td><span class="support-n">&#x2718;</span></td>
-              {%- endif %}
-              {%- if f.ios_support == 'y' %}
-              <td><span class="support-y">&#x2714;</span></td>
-              {%- elif f.ios_support in ('a', 'd') %}
-              <td{% if f.ios_note %} data-tooltip="{{ f.ios_note|e }}"{% endif %}><span class="support-a">&#x26A0;</span></td>
-              {%- else %}
-              <td><span class="support-n">&#x2718;</span></td>
-              {%- endif %}
+            <tr{% if f.group == 0 %} class="gripe"{% endif %}>
+              <td data-tooltip="{{ f.description }}" data-placement="bottom"><a href="{{ f.url }}" target="_blank">{{ f.name }}</a></td>
+              {{- support_cell(f.android, f.android_note) }}
+              {{- support_cell(f.ios, f.ios_note) }}
               {%- if f.detect %}
-              <td data-detect="{{ f.detect|e }}"></td>
+              <td data-detect="{{ f.detect }}"></td>
               {%- else %}
               <td><span class="support-u" role="img" aria-label="Unknown: not detectable from JavaScript" data-tooltip="Not detectable from JavaScript" tabindex="0">?</span></td>
               {%- endif %}

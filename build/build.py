@@ -1,285 +1,242 @@
 # /// script
 # requires-python = ">=3.12"
-# dependencies = ["requests", "jinja2"]
+# dependencies = ["jinja2"]
 # ///
-"""Download caniuse data and render index.html from Jinja template."""
+"""Download caniuse data and render index.html from the Jinja template."""
 
-from datetime import date, timezone
+import json
+import re
+from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
+from urllib.request import urlopen
 
-import requests
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
 CANIUSE_URL = "https://raw.githubusercontent.com/Fyrd/caniuse/main/fulldata-json/data-2.0.json"
 
 ROOT = Path(__file__).resolve().parent.parent
 BUILD = ROOT / "build"
-
-# (display_name, caniuse_id, detect_expression, mdn_url, description)
 MDN = "https://developer.mozilla.org/en-US/docs"
+
+MD_LINK = re.compile(r"\[([^\]]+)\]\([^)]+\)")
+NOTE_REF = re.compile(r"#(\d+)")
+RANK = {"y": 2, "a": 1, "n": 0}
+
+
+@dataclass(frozen=True)
+class Feature:
+    """One table row. android/ios take y, a or n; they override caniuse and are required without it.
+
+    detect is a JS expression for the Your Browser column; without one that cell shows unknown.
+    """
+
+    name: str
+    description: str
+    url: str
+    caniuse: str | None = None
+    detect: str | None = None
+    android: str | None = None
+    ios: str | None = None
+
+    def __post_init__(self):
+        if not self.caniuse and not (self.android and self.ios):
+            raise ValueError(f"{self.name}: needs a caniuse id or both android and ios values")
+
+
 FEATURES = [
-    ("Installation", None, "'BeforeInstallPromptEvent' in window",
-     f"{MDN}/Web/Progressive_web_apps/Guides/Making_PWAs_installable",
-     "Add the app to the home screen and launch it like a native app."),
-    ("Offline Support", "serviceworkers", "'serviceWorker' in navigator",
-     f"{MDN}/Web/API/Service_Worker_API",
-     "Cache resources and serve content without a network connection."),
-    ("Notifications", "notifications", "'Notification' in window",
-     f"{MDN}/Web/API/Notifications_API",
-     "Show system-level notifications outside the browser tab."),
-    ("Web Push", "push-api", "'PushManager' in window",
-     f"{MDN}/Web/API/Push_API",
-     "Receive push messages from a server even when the app is closed."),
-    ("Shortcuts", None, None,
-     f"{MDN}/Web/Manifest/shortcuts",
-     "Expose quick actions in the app icon's context menu."),
-    ("View Transitions", "view-transitions", "'startViewTransition' in document",
-     f"{MDN}/Web/API/View_Transition_API",
-     "Animate seamless transitions between DOM states or page navigations."),
-    ("Geolocation", "geolocation", "'geolocation' in navigator",
-     f"{MDN}/Web/API/Geolocation_API",
-     "Access the device's GPS or network-based location."),
-    ("Media Capture", "stream", "'mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices",
-     f"{MDN}/Web/API/Media_Capture_and_Streams_API",
-     "Access the camera and microphone for audio/video capture."),
-    ("Picture-in-Picture", "picture-in-picture", "document.pictureInPictureEnabled",
-     f"{MDN}/Web/API/Picture-in-Picture_API",
-     "Float a video in a small overlay window above other content."),
-    ("File System", "native-filesystem-api", "'showOpenFilePicker' in window",
-     f"{MDN}/Web/API/File_System_API",
-     "Read and write files directly on the user's local file system."),
-    ("Compression Streams", None, "'CompressionStream' in window",
-     f"{MDN}/Web/API/Compression_Streams_API",
-     "Compress and decompress data streams using gzip or deflate."),
-    ("Authentication", "webauthn", "'PublicKeyCredential' in window",
-     f"{MDN}/Web/API/Web_Authentication_API",
-     "Sign in with biometrics, security keys, or passkeys."),
-    ("Protocol Handling", None, "'registerProtocolHandler' in navigator",
-     f"{MDN}/Web/API/Navigator/registerProtocolHandler",
-     "Register the app as a handler for custom URL protocols."),
-    ("File Handling", None, "'launchQueue' in window",
-     f"{MDN}/Web/Progressive_web_apps/How_to/Associate_files_with_your_PWA",
-     "Open files from the OS directly in the installed web app."),
-    ("Contact Picker", None, "'contacts' in navigator",
-     f"{MDN}/Web/API/Contact_Picker_API",
-     "Let the user select contacts from their device address book."),
-    ("Web Share", "web-share", "'share' in navigator",
-     f"{MDN}/Web/API/Web_Share_API",
-     "Share text, URLs, or files using the native share sheet."),
-    ("Virtual Keyboard", None, "'virtualKeyboard' in navigator",
-     f"{MDN}/Web/API/VirtualKeyboard_API",
-     "Control on-screen keyboard visibility and layout behavior."),
-    ("Barcode Detection", None, "'BarcodeDetector' in window",
-     f"{MDN}/Web/API/Barcode_Detection_API",
-     "Detect and decode barcodes and QR codes from images or camera feeds."),
-    ("Face Detection", None, "'FaceDetector' in window",
-     "https://wicg.github.io/shape-detection-api/#face-detection-api",
-     "Detect faces in images using the platform's native detector."),
-    ("Vibration", "vibration", "'vibrate' in navigator",
-     f"{MDN}/Web/API/Vibration_API",
-     "Trigger haptic vibration patterns on the device."),
-    ("Audio Recording", "mediarecorder", "'MediaRecorder' in window",
-     f"{MDN}/Web/API/MediaStream_Recording_API",
-     "Record audio or video from a media stream."),
-    ("Media Session", None, "'mediaSession' in navigator",
-     f"{MDN}/Web/API/Media_Session_API",
-     "Customize media playback controls in the OS notification area."),
-    ("Audio Session", None, "'audioSession' in navigator",
-     f"{MDN}/Web/API/AudioSession",
-     "Declare audio session type to coordinate with other audio sources."),
-    ("Screen Capturing", "mdn-api_mediadevices_getdisplaymedia", "'getDisplayMedia' in navigator.mediaDevices",
-     f"{MDN}/Web/API/Screen_Capture_API",
-     "Capture the contents of a screen, window, or tab as a media stream."),
-    ("Element Capture", None, "'CaptureController' in window",
-     f"{MDN}/Web/API/Screen_Capture_API/Element_Region_Capture",
-     "Restrict a screen capture stream to a specific DOM element."),
-    ("Background Sync", "background-sync", "'SyncManager' in window",
-     f"{MDN}/Web/API/Background_Synchronization_API",
-     "Defer actions until the device has a stable network connection."),
-    ("Background Fetch", None, "'BackgroundFetchManager' in window",
-     f"{MDN}/Web/API/Background_Fetch_API",
-     "Download or upload large files in the background, surviving page close."),
-    ("Storage", "indexeddb", "'indexedDB' in window",
-     f"{MDN}/Web/API/IndexedDB_API",
-     "Store large amounts of structured data locally in the browser."),
-    ("Bluetooth", "web-bluetooth", "'bluetooth' in navigator",
-     f"{MDN}/Web/API/Web_Bluetooth_API",
-     "Communicate with nearby Bluetooth Low Energy devices."),
-    ("NFC", "webnfc", "'NDEFReader' in window",
-     f"{MDN}/Web/API/Web_NFC_API",
-     "Read and write NFC tags when the device is held close."),
-    ("AR / VR", "webxr", "'xr' in navigator",
-     f"{MDN}/Web/API/WebXR_Device_API",
-     "Render augmented or virtual reality experiences using headsets or cameras."),
-    ("Payment", "payment-request", "'PaymentRequest' in window",
-     f"{MDN}/Web/API/Payment_Request_API",
-     "Invoke the browser's built-in payment UI for checkout flows."),
-    ("Wake Lock", "wake-lock", "'wakeLock' in navigator",
-     f"{MDN}/Web/API/Screen_Wake_Lock_API",
-     "Prevent the screen from dimming or locking while the app is active."),
-    ("Orientation", "deviceorientation", "'DeviceOrientationEvent' in window",
-     f"{MDN}/Web/API/Device_orientation_events",
-     "Read the device's compass heading, tilt, and rotation."),
-    ("Motion", None, "'DeviceMotionEvent' in window",
-     f"{MDN}/Web/API/DeviceMotionEvent",
-     "Read accelerometer and gyroscope data for motion sensing."),
-    ("Network Info", "netinfo", "'connection' in navigator",
-     f"{MDN}/Web/API/Network_Information_API",
-     "Query the device's network connection type and effective speed."),
-    ("Speech Synthesis", "speech-synthesis", "'speechSynthesis' in window",
-     f"{MDN}/Web/API/SpeechSynthesis",
-     "Convert text to spoken audio using the platform's voices."),
-    ("Speech Recognition", "speech-recognition", "'SpeechRecognition' in window || 'webkitSpeechRecognition' in window",
-     f"{MDN}/Web/API/SpeechRecognition",
-     "Transcribe spoken words into text in real time."),
-    ("Multi Touch", "touch", "'ontouchstart' in window",
-     f"{MDN}/Web/API/Touch_events",
-     "Respond to multi-finger touch gestures on the screen."),
+    Feature("Install Prompt", "Offer an in-app install button instead of relying on the browser menu.",
+            f"{MDN}/Web/Progressive_web_apps/How_to/Trigger_install_prompt",
+            detect="'BeforeInstallPromptEvent' in window", android="y", ios="n"),
+    Feature("Offline Support", "Cache resources and serve content without a network connection.",
+            f"{MDN}/Web/API/Service_Worker_API",
+            caniuse="serviceworkers", detect="'serviceWorker' in navigator"),
+    Feature("Notifications", "Show system-level notifications outside the browser tab.",
+            f"{MDN}/Web/API/Notifications_API",
+            caniuse="notifications", detect="'Notification' in window"),
+    Feature("Web Push", "Receive push messages from a server even when the app is closed.",
+            f"{MDN}/Web/API/Push_API",
+            caniuse="push-api", detect="'PushManager' in window"),
+    Feature("Shortcuts", "Expose quick actions in the app icon's context menu.",
+            f"{MDN}/Web/Progressive_web_apps/Manifest/Reference/shortcuts",
+            android="y", ios="n"),
+    Feature("View Transitions", "Animate seamless transitions between DOM states or page navigations.",
+            f"{MDN}/Web/API/View_Transition_API",
+            caniuse="view-transitions", detect="'startViewTransition' in document"),
+    Feature("Geolocation", "Access the device's GPS or network-based location.",
+            f"{MDN}/Web/API/Geolocation_API",
+            caniuse="geolocation", detect="'geolocation' in navigator"),
+    Feature("Media Capture", "Access the camera and microphone for audio/video capture.",
+            f"{MDN}/Web/API/Media_Capture_and_Streams_API",
+            caniuse="stream", detect="'mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices"),
+    # caniuse marks Chrome Android partial over an auto-PiP note; the API itself has shipped since Chrome 105.
+    Feature("Picture-in-Picture", "Float a video in a small overlay window above other content.",
+            f"{MDN}/Web/API/Picture-in-Picture_API",
+            caniuse="picture-in-picture", detect="document.pictureInPictureEnabled", android="y"),
+    # caniuse still lists Chrome Android as unsupported; the pickers shipped there in Chrome 132.
+    Feature("File System", "Read and write files directly on the user's local file system.",
+            f"{MDN}/Web/API/Window/showOpenFilePicker",
+            caniuse="native-filesystem-api", detect="'showOpenFilePicker' in window", android="y"),
+    Feature("Compression Streams", "Compress and decompress data streams using gzip or deflate.",
+            f"{MDN}/Web/API/Compression_Streams_API",
+            detect="'CompressionStream' in window", android="y", ios="y"),
+    Feature("Authentication", "Sign in with biometrics, security keys, or passkeys.",
+            f"{MDN}/Web/API/Web_Authentication_API",
+            caniuse="webauthn", detect="'PublicKeyCredential' in window"),
+    Feature("Protocol Handling", "Register the app as a handler for custom URL protocols.",
+            f"{MDN}/Web/API/Navigator/registerProtocolHandler",
+            caniuse="registerprotocolhandler", detect="'registerProtocolHandler' in navigator"),
+    Feature("File Handling", "Open files from the OS directly in the installed web app.",
+            f"{MDN}/Web/Progressive_web_apps/How_to/Associate_files_with_your_PWA",
+            detect="'launchQueue' in window", android="n", ios="n"),
+    Feature("Contact Picker", "Let the user select contacts from their device address book.",
+            f"{MDN}/Web/API/Contact_Picker_API",
+            detect="'contacts' in navigator", android="y", ios="n"),
+    Feature("Web Share", "Share text, URLs, or files using the native share sheet.",
+            f"{MDN}/Web/API/Web_Share_API",
+            caniuse="web-share", detect="'share' in navigator"),
+    Feature("Virtual Keyboard", "Control on-screen keyboard visibility and layout behavior.",
+            f"{MDN}/Web/API/VirtualKeyboard_API",
+            detect="'virtualKeyboard' in navigator", android="y", ios="n"),
+    Feature("Barcode Detection", "Detect and decode barcodes and QR codes from images or camera feeds.",
+            f"{MDN}/Web/API/Barcode_Detection_API",
+            detect="'BarcodeDetector' in window", android="y", ios="n"),
+    Feature("Face Detection", "Detect faces in images using the platform's native detector.",
+            "https://wicg.github.io/shape-detection-api/#face-detection-api",
+            detect="'FaceDetector' in window", android="n", ios="n"),
+    Feature("Vibration", "Trigger haptic vibration patterns on the device.",
+            f"{MDN}/Web/API/Vibration_API",
+            caniuse="vibration", detect="'vibrate' in navigator"),
+    Feature("Audio Recording", "Record audio or video from a media stream.",
+            f"{MDN}/Web/API/MediaStream_Recording_API",
+            caniuse="mediarecorder", detect="'MediaRecorder' in window"),
+    Feature("Media Session", "Customize media playback controls in the OS notification area.",
+            f"{MDN}/Web/API/Media_Session_API",
+            detect="'mediaSession' in navigator", android="y", ios="y"),
+    Feature("Audio Session", "Declare audio session type to coordinate with other audio sources.",
+            f"{MDN}/Web/API/AudioSession",
+            detect="'audioSession' in navigator", android="n", ios="y"),
+    Feature("Screen Capturing", "Capture the contents of a screen, window, or tab as a media stream.",
+            f"{MDN}/Web/API/Screen_Capture_API",
+            detect="'mediaDevices' in navigator && 'getDisplayMedia' in navigator.mediaDevices",
+            android="n", ios="y"),
+    Feature("Element Capture", "Restrict a screen capture stream to a specific DOM element.",
+            f"{MDN}/Web/API/Screen_Capture_API/Element_Region_Capture",
+            detect="'RestrictionTarget' in window", android="n", ios="n"),
+    Feature("Background Sync", "Defer actions until the device has a stable network connection.",
+            f"{MDN}/Web/API/Background_Synchronization_API",
+            caniuse="background-sync", detect="'SyncManager' in window"),
+    Feature("Background Fetch", "Download or upload large files in the background, surviving page close.",
+            f"{MDN}/Web/API/Background_Fetch_API",
+            detect="'BackgroundFetchManager' in window", android="y", ios="n"),
+    Feature("Storage", "Store large amounts of structured data locally in the browser.",
+            f"{MDN}/Web/API/IndexedDB_API",
+            caniuse="indexeddb", detect="'indexedDB' in window"),
+    Feature("Bluetooth", "Communicate with nearby Bluetooth Low Energy devices.",
+            f"{MDN}/Web/API/Web_Bluetooth_API",
+            caniuse="web-bluetooth", detect="'bluetooth' in navigator"),
+    Feature("NFC", "Read and write NFC tags when the device is held close.",
+            f"{MDN}/Web/API/Web_NFC_API",
+            caniuse="webnfc", detect="'NDEFReader' in window"),
+    Feature("AR / VR", "Render augmented or virtual reality experiences using headsets or cameras.",
+            f"{MDN}/Web/API/WebXR_Device_API",
+            caniuse="webxr", detect="'xr' in navigator"),
+    Feature("Payment", "Invoke the browser's built-in payment UI for checkout flows.",
+            f"{MDN}/Web/API/Payment_Request_API",
+            caniuse="payment-request", detect="'PaymentRequest' in window"),
+    Feature("Wake Lock", "Prevent the screen from dimming or locking while the app is active.",
+            f"{MDN}/Web/API/Screen_Wake_Lock_API",
+            caniuse="wake-lock", detect="'wakeLock' in navigator"),
+    Feature("Orientation", "Read the device's compass heading, tilt, and rotation.",
+            f"{MDN}/Web/API/Device_orientation_events",
+            caniuse="deviceorientation", detect="'DeviceOrientationEvent' in window"),
+    # The deviceorientation caniuse entry covers both orientation and motion events.
+    Feature("Motion", "Read accelerometer and gyroscope data for motion sensing.",
+            f"{MDN}/Web/API/DeviceMotionEvent",
+            caniuse="deviceorientation", detect="'DeviceMotionEvent' in window"),
+    Feature("Network Info", "Query the device's network connection type and effective speed.",
+            f"{MDN}/Web/API/Network_Information_API",
+            caniuse="netinfo", detect="'connection' in navigator"),
+    Feature("Speech Synthesis", "Convert text to spoken audio using the platform's voices.",
+            f"{MDN}/Web/API/SpeechSynthesis",
+            caniuse="speech-synthesis", detect="'speechSynthesis' in window"),
+    Feature("Speech Recognition", "Transcribe spoken words into text in real time.",
+            f"{MDN}/Web/API/SpeechRecognition",
+            caniuse="speech-recognition", detect="'SpeechRecognition' in window || 'webkitSpeechRecognition' in window"),
+    Feature("Multi Touch", "Respond to multi-finger touch gestures on the screen.",
+            f"{MDN}/Web/API/Touch_events",
+            caniuse="touch", detect="'ontouchstart' in window"),
 ]
 
-# Hardcoded support for features without caniuse data.
-# Values: y=supported, a=partial, n=not supported
-HARDCODED = {
-    "Installation":               {"and_chr": "y", "ios_saf": "a"},
-    "Shortcuts":                  {"and_chr": "y", "ios_saf": "n"},
-    "Compression Streams":        {"and_chr": "y", "ios_saf": "y"},
-    "Protocol Handling":          {"and_chr": "y", "ios_saf": "n"},
-    "File Handling":              {"and_chr": "y", "ios_saf": "n"},
-    "Contact Picker":             {"and_chr": "y", "ios_saf": "n"},
-    "Virtual Keyboard":           {"and_chr": "y", "ios_saf": "y"},
-    "Barcode Detection":          {"and_chr": "y", "ios_saf": "a"},
-    "Face Detection":             {"and_chr": "y", "ios_saf": "n"},
-    "Media Session":              {"and_chr": "y", "ios_saf": "y"},
-    "Audio Session":              {"and_chr": "n", "ios_saf": "n"},
-    "Element Capture":            {"and_chr": "y", "ios_saf": "n"},
-    "Background Fetch":           {"and_chr": "y", "ios_saf": "n"},
-    "Motion":                     {"and_chr": "y", "ios_saf": "y"},
-}
 
-def normalize_support(val: str | None) -> str:
-    """Strip note refs: 'y #1' -> 'y', 'a #2 #3' -> 'a'."""
-    if not val:
-        return "u"
-    base = val.strip().split(" ")[0]
-    return base if base in ("y", "a", "n", "d", "u", "p", "x") else "u"
+def support(raw: str) -> str:
+    """Reduce a caniuse value such as 'a x #2' to y, a or n."""
+    value = raw.split()[0]
+    return value if value in ("y", "a") else "n"
 
 
-def extract_note_nums(val: str | None) -> list[str]:
-    """Extract note numbers from a support value like 'a #1 #3'."""
-    if not val:
-        return []
-    import re
-    return re.findall(r"#(\d+)", val)
+def note(raw: str, notes_by_num: dict[str, str]) -> str | None:
+    """Join the footnotes a caniuse value references, as plain text."""
+    texts = [notes_by_num[n] for n in NOTE_REF.findall(raw) if n in notes_by_num]
+    return MD_LINK.sub(r"\1", " ".join(texts)).replace("`", "") or None
 
 
-def strip_markdown_links(text: str) -> str:
-    """Convert markdown links [text](url) to just text."""
-    import re
-    return re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)
+def column(override: str | None, entry: dict | None, browser: str, version: str) -> tuple[str, str | None]:
+    """Return (support, partial-support note) for one fixed column. An override carries no note."""
+    if override:
+        return override, None
+    raw = entry["stats"][browser][version]
+    value = support(raw)
+    return value, note(raw, entry["notes_by_num"]) if value == "a" else None
 
 
-def resolve_notes(val: str | None, notes_by_num: dict[str, str]) -> str | None:
-    """Look up note text for a raw support value. Returns joined note string or None."""
-    nums = extract_note_nums(val)
-    if not nums:
-        return None
-    texts = [notes_by_num[n] for n in nums if n in notes_by_num]
-    return strip_markdown_links(" ".join(texts)) if texts else None
-
-
-def get_latest_raw(version_map: dict[str, str]) -> str | None:
-    """Get the raw (un-normalized) support value for the latest version."""
-    if not version_map:
-        return None
-    versions = list(version_map.keys())
-    return version_map[versions[-1]]
-
-
-def get_latest_support(version_map: dict[str, str]) -> str:
-    """Get support value for the latest version in a version map."""
-    return normalize_support(get_latest_raw(version_map))
+def group(android: str, ios: str) -> int:
+    """Sort group: 0 when Android support beats iOS, 1 when iOS beats Android, 2 on a tie."""
+    gap = RANK[android] - RANK[ios]
+    return 0 if gap > 0 else 1 if gap < 0 else 2
 
 
 def main():
     print("Downloading caniuse data...")
-    resp = requests.get(CANIUSE_URL, timeout=30)
-    resp.raise_for_status()
-    caniuse = resp.json()
-    all_data = caniuse["data"]
-    agents = caniuse["agents"]
+    with urlopen(CANIUSE_URL, timeout=30) as resp:
+        caniuse = json.load(resp)
+    data = caniuse["data"]
+    # caniuse lists unreleased versions after current_version.
+    android_version = caniuse["agents"]["and_chr"]["current_version"]
+    ios_version = caniuse["agents"]["ios_saf"]["current_version"]
 
-    # Get latest versions for fixed columns
-    and_chr_latest = list(agents.get("and_chr", {}).get("version_list", [{}]))[-1].get("version", "?")
-    ios_saf_latest = list(agents.get("ios_saf", {}).get("version_list", [{}]))[-1].get("version", "?")
-
-    features_out = []
-
-    for display_name, caniuse_id, detect_expr, mdn_url, description in FEATURES:
-        feature_id = (caniuse_id or display_name.lower().replace(" ", "-").replace("/", "-"))
-
-        feature_data = all_data.get(caniuse_id) if caniuse_id else None
-
-        chrome_note = None
-        ios_note = None
-
-        if feature_data:
-            stats = feature_data.get("stats", {})
-            notes_by_num = feature_data.get("notes_by_num", {})
-            # Prefer and_chr/ios_saf; fall back to chrome/safari desktop
-            # (many features lack mobile-specific entries)
-            chrome_map = stats.get("and_chr", {}) or stats.get("chrome", {})
-            ios_map = stats.get("ios_saf", {}) or stats.get("safari", {})
-            chrome_support = get_latest_support(chrome_map)
-            ios_support = get_latest_support(ios_map)
-
-            # Resolve footnotes for partial/flagged support
-            if chrome_support in ("a", "d"):
-                chrome_note = resolve_notes(get_latest_raw(chrome_map), notes_by_num)
-            if ios_support in ("a", "d"):
-                ios_note = resolve_notes(get_latest_raw(ios_map), notes_by_num)
-        else:
-            # Use hardcoded values
-            hc = HARDCODED.get(display_name, {"and_chr": "u", "ios_saf": "u"})
-            chrome_support = hc.get("and_chr", "u")
-            ios_support = hc.get("ios_saf", "u")
-
-        features_out.append({
-            "name": display_name,
-            "id": feature_id,
-            "chrome_support": chrome_support,
-            "ios_support": ios_support,
-            "chrome_note": chrome_note,
+    rows = []
+    for f in FEATURES:
+        if f.caniuse and f.caniuse not in data:
+            raise SystemExit(f"{f.name}: caniuse id {f.caniuse!r} is not in data-2.0.json")
+        entry = data.get(f.caniuse)
+        android, android_note = column(f.android, entry, "and_chr", android_version)
+        ios, ios_note = column(f.ios, entry, "ios_saf", ios_version)
+        rows.append({
+            "name": f.name,
+            "description": f.description,
+            "url": f.url,
+            "detect": f.detect,
+            "android": android,
+            "ios": ios,
+            "android_note": android_note,
             "ios_note": ios_note,
-            "detect": detect_expr,
-            "mdn_url": mdn_url,
-            "description": description,
+            "group": group(android, ios),
         })
+    rows.sort(key=lambda r: r["group"])
 
-    # Sort: Android-yes/iOS-no first, then iOS-yes/Android-no, then the rest
-    def sort_key(f):
-        chrome_yes = f["chrome_support"] in ("y", "a")
-        ios_yes = f["ios_support"] in ("y", "a")
-        if chrome_yes and not ios_yes:
-            return 0
-        if ios_yes and not chrome_yes:
-            return 1
-        return 2
-    features_out.sort(key=sort_key)
-
-    # Render template
-    env = Environment(loader=FileSystemLoader(str(BUILD)), autoescape=False)
-    template = env.get_template("template.html.j2")
-
-    html = template.render(
-        features=features_out,
-        updated=date.today().isoformat(),
-        chrome_version=and_chr_latest,
-        ios_version=ios_saf_latest,
+    env = Environment(loader=FileSystemLoader(BUILD), autoescape=True, undefined=StrictUndefined)
+    today = date.today().isoformat()
+    html = env.get_template("template.html.j2").render(
+        features=rows,
+        updated=today,
+        android_version=android_version,
+        ios_version=ios_version,
     )
 
     out_path = ROOT / "index.html"
-    out_path.write_text(html)
-    print(f"Wrote {out_path} ({len(features_out)} features, updated {date.today()})")
+    out_path.write_text(html, encoding="utf-8")
+    print(f"Wrote {out_path} ({len(rows)} features, updated {today})")
 
 
 if __name__ == "__main__":
